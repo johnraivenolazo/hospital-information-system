@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Registration Forms - Hospital Information System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors from design system */
+            --primary-blue: #2563EB;
+            --primary-blue-light: #3B82F6;
+            --primary-blue-dark: #1D4ED8;
+            --medical-green: #059669;
+            --medical-green-light: #10B981;
+            --warning-orange: #F59E0B;
+            --error-red: #DC2626;
+            --white: #FFFFFF;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+            
+            /* Typography */
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            
+            /* Spacing */
+            --spacing-1: 0.25rem;
+            --spacing-2: 0.5rem;
+            --spacing-3: 0.75rem;
+            --spacing-4: 1rem;
+            --spacing-5: 1.25rem;
+            --spacing-6: 1.5rem;
+            --spacing-8: 2rem;
+            --spacing-12: 3rem;
+            
+            /* Border Radius */
+            --radius-sm: 0.25rem;
+            --radius-md: 0.375rem;
+            --radius-lg: 0.5rem;
+            --radius-xl: 0.75rem;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--gray-50);
+            color: var(--gray-800);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-6);
+        }
+
+        /* Header */
+        .header {
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+            padding: var(--spacing-4) var(--spacing-6);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-8);
+            border-radius: var(--radius-lg);
+        }
+
+        .logo {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+            color: var(--gray-600);
+        }
+
+        /* Form Container */
+        .form-container {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            margin-bottom: var(--spacing-8);
+        }
+
+        .form-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
+            color: var(--white);
+            padding: var(--spacing-6);
+            text-align: center;
+        }
+
+        .form-title {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            margin-bottom: var(--spacing-2);
+        }
+
+        .form-subtitle {
+            font-size: var(--font-size-base);
+            opacity: 0.9;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            background: var(--gray-100);
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: var(--spacing-4) var(--spacing-6);
+            background: none;
+            border: none;
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-button.active {
+            color: var(--primary-blue);
+            background: var(--white);
+            border-bottom-color: var(--primary-blue);
+        }
+
+        .tab-button:hover:not(.active) {
+            background: var(--gray-200);
+        }
+
+        /* Form Content */
+        .form-content {
+            padding: var(--spacing-8);
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* Form Sections */
+        .form-section {
+            margin-bottom: var(--spacing-8);
+        }
+
+        .section-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: var(--spacing-4);
+            padding-bottom: var(--spacing-2);
+            border-bottom: 2px solid var(--gray-200);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-4);
+        }
+
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-4);
+        }
+
+        .form-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: var(--spacing-4);
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-4);
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: var(--spacing-2);
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .form-label.required::after {
+            content: " *";
+            color: var(--error-red);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--spacing-3);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-base);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: var(--spacing-3);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            background: var(--white);
+            font-size: var(--font-size-base);
+            cursor: pointer;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: var(--spacing-3);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: var(--spacing-4);
+            flex-wrap: wrap;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            cursor: pointer;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            cursor: pointer;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: var(--spacing-3) var(--spacing-6);
+            border-radius: var(--radius-md);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: var(--font-size-base);
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-blue-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
+        .btn-success {
+            background: var(--medical-green);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background: var(--medical-green-light);
+        }
+
+        .btn-lg {
+            padding: var(--spacing-4) var(--spacing-8);
+            font-size: var(--font-size-lg);
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: var(--spacing-6);
+            border-top: 1px solid var(--gray-200);
+            margin-top: var(--spacing-8);
+        }
+
+        .form-actions-right {
+            display: flex;
+            gap: var(--spacing-3);
+        }
+
+        /* Patient ID Display */
+        .patient-id-display {
+            background: var(--gray-100);
+            padding: var(--spacing-4);
+            border-radius: var(--radius-md);
+            border: 2px dashed var(--gray-300);
+            text-align: center;
+            margin-bottom: var(--spacing-6);
+        }
+
+        .patient-id {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .patient-id-label {
+            font-size: var(--font-size-sm);
+            color: var(--gray-500);
+        }
+
+        /* Emergency Contact Section */
+        .emergency-contact {
+            background: var(--gray-50);
+            padding: var(--spacing-6);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--gray-200);
+        }
+
+        /* Insurance Information */
+        .insurance-info {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(16, 185, 129, 0.05));
+            padding: var(--spacing-6);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--gray-200);
+        }
+
+        /* Inpatient Specific */
+        .room-assignment {
+            background: var(--warning-orange);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05));
+            padding: var(--spacing-6);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        /* Status Indicators */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            padding: var(--spacing-2) var(--spacing-4);
+            border-radius: var(--radius-lg);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+        }
+
+        .status-draft {
+            background: rgba(107, 114, 128, 0.1);
+            color: var(--gray-600);
+        }
+
+        .status-complete {
+            background: rgba(5, 150, 105, 0.1);
+            color: var(--medical-green);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--spacing-4);
+            }
+            
+            .form-grid,
+            .form-grid-2,
+            .form-grid-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab-nav {
+                flex-direction: column;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+                gap: var(--spacing-4);
+            }
+            
+            .form-actions-right {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Animation */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">🏥 HOSPITAL MANAGEMENT</div>
+            <div class="user-info">
+                <span>👤 Dr. Quack Quack</span>
+                <span>|</span>
+                <span>Registration Desk</span>
+            </div>
+        </div>
+
+        <!-- Patient Registration Form -->
+        <div class="form-container">
+            <div class="form-header">
+                <h1 class="form-title">Patient Registration</h1>
+                <p class="form-subtitle">Complete patient information for hospital admission</p>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="tab-nav">
+                <button class="tab-button active" onclick="switchTab('outpatient')">
+                    🚶 Outpatient Registration
+                </button>
+                <button class="tab-button" onclick="switchTab('inpatient')">
+                    🏥 Inpatient Registration
+                </button>
+            </div>
+
+            <div class="form-content">
+                <!-- Outpatient Registration -->
+                <div id="outpatient" class="tab-panel active fade-in">
+                    <form id="outpatientForm">
+                        <!-- Patient ID Display -->
+                        <div class="patient-id-display">
+                            <div class="patient-id">HIS-2024-OUT-001</div>
+                            <div class="patient-id-label">Auto-generated Patient ID</div>
+                        </div>
+
+                        <!-- Personal Information -->
+                        <div class="form-section">
+                            <h2 class="section-title">👤 Personal Information</h2>
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label class="form-label required">First Name</label>
+                                    <input type="text" class="form-input" placeholder="Enter first name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required">Last Name</label>
+                                    <input type="text" class="form-input" placeholder="Enter last name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Middle Name</label>
+                                    <input type="text" class="form-input" placeholder="Enter middle name">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required">Date of Birth</label>
+                                    <input type="date" class="form-input" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required">Gender</label>
+                                    <div class="radio-group">
+                                        <label class="radio-item">
+                                            <input type="radio" name="gender" value="male" required>
+                                            <span>Male</span>
+                                        </label>
+                                        <label class="radio-item">
+                                            <input type="radio" name="gender" value="female" required>
+                                            <span>Female</span>
+                                        </label>
+                                        <label class="radio-item">
+                                            <input type="radio" name="gender" value="other" required>
+                                            <span>Other</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Marital Status</label>
+                                    <select class="form-select">
+                                        <option value="">Select status</option>
+                                        <option value="single">Single</option>
+                                        <option value="married">Married</option>
+                                        <option value="divorced">Divorced</option>
+                                        <option value="widowed">Widowed</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Information -->
+                        <div class="form-section">
+                            <h2 class="section-title">📞 Contact Information</h2>
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label class="form-label required">Phone Number</label>
+                                    <input type="tel" class="form-input" placeholder="+1 (555) 123-4567" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Email Address</label>
+                                    <input type="email" class="form-input" placeholder="patient@email.com">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label class="form-label required">Address</label>
+                                    <input type="text" class="form-input" placeholder="Street address" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required">City</label>
+                                    <input type="text" class="form-input" placeholder="City" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required">State/Province</label>
+                                    <input type="text" class="form-input" placeholder="State/Province" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required">ZIP/Postal Code</label>
+                                    <input type="text" class="form-input" placeholder="ZIP Code" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Country</label>
+                                    <select class="form-select">
+                                        <option value="US">United States</option>
+                                        <option value="CA">Canada</option>
+                                        <option value="UK">United Kingdom</option>
+                                        <option value="AU">Australia</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Emergency Contact -->
+                        <div class="form-section">
+                            <h2 class="section-title">🚨 Emergency Contact</h2>
+                            <div class="emergency-contact">
+                                <div class="form-grid-2">
+                                    <div class="form-group">
+                                        <label class="form-label required">Contact Name</label>
+                                        <input type="text" class="form-input" placeholder="Full name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label required">Relationship</label>
+                                        <select class="form-select" required>
+                                            <option value="">Select relationship</option>
+                                            <option value="spouse">Spouse</option>
+                                            <option value="parent">Parent</option>
+                                            <option value="child">Child</option>
+                                            <option value="sibling">Sibling</option>
+                                            <option value="friend">Friend</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label required">Phone Number</label>
+                                        <input type="tel" class="form-input" placeholder="+1 (555) 123-4567" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Email Address</label>
+                                        <input type="email" class="form-input" placeholder="contact@email.com">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Medical Information -->
+                        <div class="form-section">
+                            <h2 class="section-title">🏥 Medical Information</h2>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Primary Care Physician</label>
+                                    <input type="text" class="form-input" placeholder="Dr. Name">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Referring Physician</label>
+                                    <input type="text" class="form-input" placeholder="Dr. Name">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label class="form-label">Chief Complaint</label>
+                                    <textarea class="form-textarea" placeholder="Describe the main reason for today's visit..."></textarea>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label class="form-label">Medical History</label>
+                                    <textarea class="form-textarea" placeholder="Previous medical conditions, surgeries, hospitalizations..."></textarea>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label class="form-label">Current Medications</label>
+                                    <textarea class="form-textarea" placeholder="List all current medications, dosages, and frequency..."></textarea>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label class="form-label">Allergies</label>
+                                    <textarea class="form-textarea" placeholder="Drug allergies, food allergies, environmental allergies..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Insurance Information -->
+                        <div class="form-section">
+                            <h2 class="section-title">💳 Insurance Information</h2>
+                            <div class="insurance-info">
+                                <div class="form-grid-2">
+                                    <div class="form-group">
+                                        <label class="form-label">Insurance Provider</label>
+                                        <input type="text" class="form-input" placeholder="Insurance company name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Policy Number</label>
+                                        <input type="text" class="form-input" placeholder="Policy/Member ID">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Group Number</label>
+                                        <input type="text" class="form-input" placeholder="Group ID">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Policy Holder Name</label>
+                                        <input type="text" class="form-input" placeholder="If different from patient">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="checkbox-group">
+                                        <input type="checkbox">
+                                        <span>Patient is the policy holder</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="form-actions">
+                            <div class="status-indicator status-draft">
+                                📝 Draft Status
+                            </div>
+                            <div class="form-actions-right">
+                                <button type="button" class="btn btn-secondary">Save as Draft</button>
+                                <button type="button" class="btn btn-secondary">Clear Form</button>
+                                <button type="submit" class="btn btn-success btn-lg">Register Patient</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Inpatient Registration -->
+                <div id="inpatient" class="tab-panel">
+                    <form id="inpatientForm">
+                        <!-- Patient ID Display -->
+                        <div class="patient-id-display">
+                            <div class="patient-id">HIS-2024-IN-001</div>
+                            <div class="patient-id-label">Auto-generated Patient ID</div>
+                        </div>
+
+                        <!-- Personal Information (Same as Outpatient) -->
+                        <div class="form-section">
+                            <h2 class="section-title">👤 Personal Information</h2>
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label class="form-label required">First Name</label>
+                                    <input type="text" class="form-input" placeholder="Enter first name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required">Last Name</label>
+                                    <input type="text" class="form-input" placeholder="Enter last name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Middle Name</label>
+                                    <input type="text" class="form-input" placeholder="Enter middle name">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required">Date of Birth</label>
+                                    <input type="date" class="form-input" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required">Gender</label>
+                                    <div class="radio-group">
+                                        <label class="radio-item">
+                                            <input type="radio" name="gender_in" value="male" required>
+                                            <span>Male</span>
+                                        </label>
+                                        <label class="radio-item">
+                                            <input type="radio" name="gender_in" value="female" required>
+                                            <span>Female</span>
+                                        </label>
+                                        <label class="radio-item">
+                                            <input type="radio" name="gender_in" value="other" required>
+                                            <span>Other</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Marital Status</label>
+                                    <select class="form-select">
+                                        <option value="">Select status</option>
+                                        <option value="single">Single</option>
+                                        <option value="married">Married</option>
+                                        <option value="divorced">Divorced</option>
+                                        <option value="widowed">Widowed</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Admission Information -->
+                        <div class="form-section">
+                            <h2 class="section-title">🏥 Admission Information</h2>
+                            <div class="room-assignment">
+                                <div class="form-grid-3">
+                                    <div class="form-group">
+                                        <label class="form-label required">Admission Type</label>
+                                        <select class="form-select" required>
+                                            <option value="">Select type</option>
+                                            <option value="emergency">Emergency</option>
+                                            <option value="elective">Elective</option>
+                                            <option value="urgent">Urgent</option>
+                                            <option value="observation">Observation</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label required">Admission Date</label>
+                                        <input type="datetime-local" class="form-input" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Expected Length of Stay</label>
+                                        <select class="form-select">
+                                            <option value="">Select duration</option>
+                                            <option value="1-2">1-2 days</option>
+                                            <option value="3-5">3-5 days</option>
+                                            <option value="1-2weeks">1-2 weeks</option>
+                                            <option value="longer">Longer than 2 weeks</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label required">Department</label>
+                                        <select class="form-select" required>
+                                            <option value="">Select department</option>
+                                            <option value="cardiology">Cardiology</option>
+                                            <option value="orthopedics">Orthopedics</option>
+                                            <option value="neurology">Neurology</option>
+                                            <option value="surgery">Surgery</option>
+                                            <option value="icu">ICU</option>
+                                            <option value="pediatrics">Pediatrics</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Attending Physician</label>
+                                        <select class="form-select">
+                                            <option value="">Select physician</option>
+                                            <option value="dr_smith">Dr. John Smith</option>
+                                            <option value="dr_johnson">Dr. Sarah Johnson</option>
+                                            <option value="dr_williams">Dr. Michael Williams</option>
+                                            <option value="dr_brown">Dr. Emily Brown</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Room Preference</label>
+                                        <select class="form-select">
+                                            <option value="">No preference</option>
+                                            <option value="private">Private Room</option>
+                                            <option value="semi-private">Semi-Private Room</option>
+                                            <option value="ward">Ward</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Information (Same structure as outpatient) -->
+                        <div class="form-section">
+                            <h2 class="section-title">📞 Contact Information</h2>
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label class="form-label required">Phone Number</label>
+                                    <input type="tel" class="form-input" placeholder="+1 (555) 123-4567" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Email Address</label>
+                                    <input type="email" class="form-input" placeholder="patient@email.com">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label class="form-label required">Address</label>
+                                    <input type="text" class="form-input" placeholder="Street address" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required">City</label>
+                                    <input type="text" class="form-input" placeholder="City" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required">State/Province</label>
+                                    <input type="text" class="form-input" placeholder="State/Province" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required">ZIP/Postal Code</label>
+                                    <input type="text" class="form-input" placeholder="ZIP Code" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Emergency Contact -->
+                        <div class="form-section">
+                            <h2 class="section-title">🚨 Emergency Contact</h2>
+                            <div class="emergency-contact">
+                                <div class="form-grid-2">
+                                    <div class="form-group">
+                                        <label class="form-label required">Contact Name</label>
+                                        <input type="text" class="form-input" placeholder="Full name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label required">Relationship</label>
+                                        <select class="form-select" required>
+                                            <option value="">Select relationship</option>
+                                            <option value="spouse">Spouse</option>
+                                            <option value="parent">Parent</option>
+                                            <option value="child">Child</option>
+                                            <option value="sibling">Sibling</option>
+                                            <option value="friend">Friend</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label required">Phone Number</label>
+                                        <input type="tel" class="form-input" placeholder="+1 (555) 123-4567" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Email Address</label>
+                                        <input type="email" class="form-input" placeholder="contact@email.com">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="checkbox-group">
+                                        <input type="checkbox">
+                                        <span>Authorized to receive medical information</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Medical Information (Enhanced for inpatient) -->
+                        <div class="form-section">
+                            <h2 class="section-title">🏥 Medical Information</h2>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label required">Admission Diagnosis</label>
+                                    <input type="text" class="form-input" placeholder="Primary diagnosis" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Secondary Diagnosis</label>
+                                    <input type="text" class="form-input" placeholder="Secondary diagnosis">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label class="form-label">Medical History</label>
+                                    <textarea class="form-textarea" placeholder="Previous medical conditions, surgeries, hospitalizations..."></textarea>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label class="form-label">Current Medications</label>
+                                    <textarea class="form-textarea" placeholder="List all current medications, dosages, and frequency..."></textarea>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label class="form-label">Allergies</label>
+                                    <textarea class="form-textarea" placeholder="Drug allergies, food allergies, environmental allergies..."></textarea>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label class="form-label">Special Instructions</label>
+                                    <textarea class="form-textarea" placeholder="Dietary restrictions, mobility limitations, special care instructions..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Insurance Information (Same as outpatient) -->
+                        <div class="form-section">
+                            <h2 class="section-title">💳 Insurance Information</h2>
+                            <div class="insurance-info">
+                                <div class="form-grid-2">
+                                    <div class="form-group">
+                                        <label class="form-label">Insurance Provider</label>
+                                        <input type="text" class="form-input" placeholder="Insurance company name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Policy Number</label>
+                                        <input type="text" class="form-input" placeholder="Policy/Member ID">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Group Number</label>
+                                        <input type="text" class="form-input" placeholder="Group ID">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Policy Holder Name</label>
+                                        <input type="text" class="form-input" placeholder="If different from patient">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="checkbox-group">
+                                        <input type="checkbox">
+                                        <span>Patient is the policy holder</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="checkbox-group">
+                                        <input type="checkbox">
+                                        <span>Pre-authorization obtained</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="form-actions">
+                            <div class="status-indicator status-draft">
+                                📝 Draft Status
+                            </div>
+                            <div class="form-actions-right">
+                                <button type="button" class="btn btn-secondary">Save as Draft</button>
+                                <button type="button" class="btn btn-secondary">Clear Form</button>
+                                <button type="submit" class="btn btn-success btn-lg">Admit Patient</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Hide all tab panels
+            const panels = document.querySelectorAll('.tab-panel');
+            panels.forEach(panel => {
+                panel.classList.remove('active');
+            });
+
+            // Remove active class from all tab buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected tab panel
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+
+            // Add fade-in animation
+            document.getElementById(tabName).classList.add('fade-in');
+            setTimeout(() => {
+                document.getElementById(tabName).classList.remove('fade-in');
+            }, 300);
+        }
+
+        // Form validation and submission
+        document.getElementById('outpatientForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Outpatient registration submitted successfully!\nPatient ID: HIS-2024-OUT-001');
+        });
+
+        document.getElementById('inpatientForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Inpatient admission submitted successfully!\nPatient ID: HIS-2024-IN-001\nRoom assignment pending...');
+        });
+
+        // Auto-generate patient ID based on current date and type
+        function generatePatientId(type) {
+            const date = new Date();
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            
+            return `HIS-${year}-${type.toUpperCase()}-${random}`;
+        }
+
+        // Initialize with current date for admission date
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            const dateTimeString = now.toISOString().slice(0, 16);
+            const admissionDateInput = document.querySelector('input[type="datetime-local"]');
+            if (admissionDateInput) {
+                admissionDateInput.value = dateTimeString;
+            }
+        });
+    </script>
+</body>
+</html>

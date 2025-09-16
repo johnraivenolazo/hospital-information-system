@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Information System - Registration Module Design</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Primary Medical Colors */
+            --primary-blue: #2563EB;
+            --primary-blue-light: #3B82F6;
+            --primary-blue-dark: #1D4ED8;
+            
+            /* Secondary Colors */
+            --medical-green: #059669;
+            --medical-green-light: #10B981;
+            --warning-orange: #F59E0B;
+            --error-red: #DC2626;
+            
+            /* Neutral Colors */
+            --white: #FFFFFF;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+            
+            /* Typography */
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            
+            /* Spacing */
+            --spacing-1: 0.25rem;
+            --spacing-2: 0.5rem;
+            --spacing-3: 0.75rem;
+            --spacing-4: 1rem;
+            --spacing-5: 1.25rem;
+            --spacing-6: 1.5rem;
+            --spacing-8: 2rem;
+            --spacing-12: 3rem;
+            
+            /* Border Radius */
+            --radius-sm: 0.25rem;
+            --radius-md: 0.375rem;
+            --radius-lg: 0.5rem;
+            --radius-xl: 0.75rem;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--gray-50);
+            color: var(--gray-800);
+            line-height: 1.6;
+        }
+
+        .design-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-8);
+        }
+
+        .design-section {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--spacing-8);
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
+            color: var(--white);
+            padding: var(--spacing-6);
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            margin-bottom: var(--spacing-2);
+        }
+
+        .section-subtitle {
+            font-size: var(--font-size-base);
+            opacity: 0.9;
+        }
+
+        .section-content {
+            padding: var(--spacing-8);
+        }
+
+        /* Color Palette */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-4);
+            margin-bottom: var(--spacing-8);
+        }
+
+        .color-card {
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+        }
+
+        .color-swatch {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .color-info {
+            padding: var(--spacing-3);
+            background: var(--white);
+        }
+
+        .color-name {
+            font-weight: 600;
+            margin-bottom: var(--spacing-1);
+        }
+
+        .color-hex {
+            font-size: var(--font-size-sm);
+            color: var(--gray-500);
+            font-family: monospace;
+        }
+
+        /* Typography */
+        .typography-grid {
+            display: grid;
+            gap: var(--spacing-4);
+        }
+
+        .typography-item {
+            padding: var(--spacing-4);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+        }
+
+        .typography-label {
+            font-size: var(--font-size-sm);
+            color: var(--gray-500);
+            margin-bottom: var(--spacing-2);
+        }
+
+        /* Buttons */
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-4);
+            margin-bottom: var(--spacing-6);
+        }
+
+        .btn {
+            padding: var(--spacing-3) var(--spacing-6);
+            border-radius: var(--radius-md);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: var(--font-size-base);
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-blue-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
+        .btn-success {
+            background: var(--medical-green);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background: var(--medical-green-light);
+        }
+
+        .btn-warning {
+            background: var(--warning-orange);
+            color: var(--white);
+        }
+
+        .btn-danger {
+            background: var(--error-red);
+            color: var(--white);
+        }
+
+        .btn-lg {
+            padding: var(--spacing-4) var(--spacing-8);
+            font-size: var(--font-size-lg);
+        }
+
+        .btn-sm {
+            padding: var(--spacing-2) var(--spacing-4);
+            font-size: var(--font-size-sm);
+        }
+
+        /* Form Elements */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-6);
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-4);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: var(--spacing-2);
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--spacing-3);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-base);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: var(--spacing-3);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            background: var(--white);
+            font-size: var(--font-size-base);
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: var(--spacing-3);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: var(--spacing-4);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: var(--spacing-4) var(--spacing-6);
+            background: var(--gray-50);
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .card-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .card-body {
+            padding: var(--spacing-6);
+        }
+
+        /* Navigation */
+        .nav-header {
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+            padding: var(--spacing-4) var(--spacing-6);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-8);
+        }
+
+        .nav-logo {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: var(--spacing-6);
+        }
+
+        .nav-item {
+            color: var(--gray-600);
+            text-decoration: none;
+            font-weight: 500;
+            padding: var(--spacing-2) var(--spacing-3);
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--primary-blue);
+            background: rgba(37, 99, 235, 0.1);
+        }
+
+        /* Modal/Dialog */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: var(--spacing-6);
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: var(--font-size-xl);
+            cursor: pointer;
+            color: var(--gray-400);
+        }
+
+        .modal-body {
+            padding: var(--spacing-6);
+        }
+
+        .modal-footer {
+            padding: var(--spacing-6);
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--spacing-3);
+        }
+
+        /* Tables */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: var(--spacing-4);
+        }
+
+        .table th,
+        .table td {
+            padding: var(--spacing-3);
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .table th {
+            background: var(--gray-50);
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .table tbody tr:hover {
+            background: var(--gray-50);
+        }
+
+        /* Status Badges */
+        .badge {
+            display: inline-block;
+            padding: var(--spacing-1) var(--spacing-3);
+            border-radius: var(--radius-lg);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-success {
+            background: rgba(5, 150, 105, 0.1);
+            color: var(--medical-green);
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning-orange);
+        }
+
+        .badge-error {
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--error-red);
+        }
+
+        .badge-info {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary-blue);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .design-container {
+                padding: var(--spacing-4);
+            }
+            
+            .button-grid,
+            .form-grid,
+            .color-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+        }
+
+        /* Demo Styles */
+        .demo-section {
+            margin-bottom: var(--spacing-8);
+        }
+
+        .component-demo {
+            padding: var(--spacing-6);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .demo-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-4);
+            color: var(--gray-800);
+        }
+    </style>
+</head>
+<body>
+    <div class="design-container">
+        <!-- Header -->
+        <div class="design-section">
+            <div class="section-header">
+                <h1 class="section-title">Hospital Information System</h1>
+                <p class="section-subtitle">Registration Module - Interface Design System</p>
+            </div>
+        </div>
+
+        <!-- Color Palette -->
+        <div class="design-section">
+            <div class="section-header">
+                <h2 class="section-title">Color Palette</h2>
+                <p class="section-subtitle">Professional medical-themed color system</p>
+            </div>
+            <div class="section-content">
+                <div class="color-grid">
+                    <div class="color-card">
+                        <div class="color-swatch" style="background: #2563EB;">Primary Blue</div>
+                        <div class="color-info">
+                            <div class="color-name">Primary Blue</div>
+                            <div class="color-hex">#2563EB</div>
+                        </div>
+                    </div>
+                    <div class="color-card">
+                        <div class="color-swatch" style="background: #059669;">Medical Green</div>
+                        <div class="color-info">
+                            <div class="color-name">Medical Green</div>
+                            <div class="color-hex">#059669</div>
+                        </div>
+                    </div>
+                    <div class="color-card">
+                        <div class="color-swatch" style="background: #F59E0B;">Warning Orange</div>
+                        <div class="color-info">
+                            <div class="color-name">Warning Orange</div>
+                            <div class="color-hex">#F59E0B</div>
+                        </div>
+                    </div>
+                    <div class="color-card">
+                        <div class="color-swatch" style="background: #DC2626;">Error Red</div>
+                        <div class="color-info">
+                            <div class="color-name">Error Red</div>
+                            <div class="color-hex">#DC2626</div>
+                        </div>
+                    </div>
+                    <div class="color-card">
+                        <div class="color-swatch" style="background: #6B7280; color: white;">Neutral Gray</div>
+                        <div class="color-info">
+                            <div class="color-name">Neutral Gray</div>
+                            <div class="color-hex">#6B7280</div>
+                        </div>
+                    </div>
+                    <div class="color-card">
+                        <div class="color-swatch" style="background: #F9FAFB; color: #374151;">Light Background</div>
+                        <div class="color-info">
+                            <div class="color-name">Light Background</div>
+                            <div class="color-hex">#F9FAFB</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Typography -->
+        <div class="design-section">
+            <div class="section-header">
+                <h2 class="section-title">Typography</h2>
+                <p class="section-subtitle">Clear and readable text hierarchy</p>
+            </div>
+            <div class="section-content">
+                <div class="typography-grid">
+                    <div class="typography-item">
+                        <div class="typography-label">Heading 1 - Page Titles</div>
+                        <h1 style="font-size: var(--font-size-3xl); font-weight: 700;">Hospital Management System</h1>
+                    </div>
+                    <div class="typography-item">
+                        <div class="typography-label">Heading 2 - Section Titles</div>
+                        <h2 style="font-size: var(--font-size-2xl); font-weight: 600;">Patient Registration</h2>
+                    </div>
+                    <div class="typography-item">
+                        <div class="typography-label">Heading 3 - Subsection Titles</div>
+                        <h3 style="font-size: var(--font-size-xl); font-weight: 600;">Personal Information</h3>
+                    </div>
+                    <div class="typography-item">
+                        <div class="typography-label">Body Text - Regular Content</div>
+                        <p style="font-size: var(--font-size-base);">This is the standard body text used throughout the application for regular content and descriptions.</p>
+                    </div>
+                    <div class="typography-item">
+                        <div class="typography-label">Small Text - Helper Text</div>
+                        <p style="font-size: var(--font-size-sm); color: var(--gray-500);">Helper text and additional information displayed in smaller font size.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="design-section">
+            <div class="section-header">
+                <h2 class="section-title">Button Components</h2>
+                <p class="section-subtitle">Interactive elements for user actions</p>
+            </div>
+            <div class="section-content">
+                <div class="demo-section">
+                    <h3 class="demo-title">Primary Actions</h3>
+                    <div class="button-grid">
+                        <button class="btn btn-primary">Register Patient</button>
+                        <button class="btn btn-primary btn-lg">Save Registration</button>
+                        <button class="btn btn-success">Confirm Registration</button>
+                        <button class="btn btn-warning">Update Information</button>
+                    </div>
+                </div>
+                
+                <div class="demo-section">
+                    <h3 class="demo-title">Secondary Actions</h3>
+                    <div class="button-grid">
+                        <button class="btn btn-secondary">Cancel</button>
+                        <button class="btn btn-secondary btn-sm">Edit</button>
+                        <button class="btn btn-danger">Delete Record</button>
+                        <button class="btn btn-secondary">Search Patients</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Elements -->
+        <div class="design-section">
+            <div class="section-header">
+                <h2 class="section-title">Form Components</h2>
+                <p class="section-subtitle">Input fields and form controls</p>
+            </div>
+            <div class="section-content">
+                <div class="form-grid">
+                    <div class="component-demo">
+                        <h3 class="demo-title">Text Inputs</h3>
+                        <div class="form-group">
+                            <label class="form-label">Patient Name</label>
+                            <input type="text" class="form-input" placeholder="Enter full name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-input" placeholder="patient@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-input" placeholder="+1 (555) 123-4567">
+                        </div>
+                    </div>
+                    
+                    <div class="component-demo">
+                        <h3 class="demo-title">Selection Controls</h3>
+                        <div class="form-group">
+                            <label class="form-label">Patient Type</label>
+                            <select class="form-select">
+                                <option>Select patient type</option>
+                                <option>Inpatient</option>
+                                <option>Outpatient</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Gender</label>
+                            <div class="radio-group">
+                                <label class="checkbox-group">
+                                    <input type="radio" name="gender" value="male">
+                                    <span>Male</span>
+                                </label>
+                                <label class="checkbox-group">
+                                    <input type="radio" name="gender" value="female">
+                                    <span>Female</span>
+                                </label>
+                                <label class="checkbox-group">
+                                    <input type="radio" name="gender" value="other">
+                                    <span>Other</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-group">
+                                <input type="checkbox">
+                                <span>Emergency Contact Available</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="component-demo">
+                    <h3 class="demo-title">Text Area</h3>
+                    <div class="form-group">
+                        <label class="form-label">Medical History</label>
+                        <textarea class="form-textarea" placeholder="Enter patient's medical history, allergies, and relevant information..."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="design-section">
+            <div class="section-header">
+                <h2 class="section-title">Navigation Components</h2>
+                <p class="section-subtitle">Header and navigation elements</p>
+            </div>
+            <div class="section-content">
+                <div class="component-demo">
+                    <div class="nav-header">
+                        <div class="nav-logo">🏥 HOSPITAL MANAGEMENT</div>
+                        <nav class="nav-menu">
+                            <a href="#" class="nav-item active">Registration</a>
+                            <a href="#" class="nav-item">Consultation</a>
+                            <a href="#" class="nav-item">Treatment</a>
+                            <a href="#" class="nav-item">Billing</a>
+                            <a href="#" class="nav-item">Reports</a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cards and Layout -->
+        <div class="design-section">
+            <div class="section-header">
+                <h2 class="section-title">Card Components</h2>
+                <p class="section-subtitle">Content containers and layout elements</p>
+            </div>
+            <div class="section-content">
+                <div class="form-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Patient Information</h3>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Patient ID:</strong> HIS-2024-001</p>
+                            <p><strong>Name:</strong> John Doe</p>
+                            <p><strong>Age:</strong> 35 years</p>
+                            <p><strong>Type:</strong> <span class="badge badge-info">Outpatient</span></p>
+                            <p><strong>Status:</strong> <span class="badge badge-success">Active</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Registration Summary</h3>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Today's Registrations:</strong> 24</p>
+                            <p><strong>Inpatients:</strong> 8</p>
+                            <p><strong>Outpatients:</strong> 16</p>
+                            <p><strong>Pending:</strong> <span class="badge badge-warning">3</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dialog/Modal -->
+        <div class="design-section">
+            <div class="section-header">
+                <h2 class="section-title">Dialog Boxes</h2>
+                <p class="section-subtitle">Modal windows and confirmation dialogs</p>
+            </div>
+            <div class="section-content">
+                <div class="component-demo">
+                    <h3 class="demo-title">Confirmation Dialog</h3>
+                    <div class="modal" style="position: relative; max-width: 400px; margin: 0 auto;">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Confirm Registration</h4>
+                            <button class="modal-close">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to register this patient? Please verify all information is correct before proceeding.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary">Cancel</button>
+                            <button class="btn btn-primary">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="component-demo">
+                    <h3 class="demo-title">Patient Search Dialog</h3>
+                    <div class="modal" style="position: relative; max-width: 500px; margin: 0 auto;">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Search Existing Patient</h4>
+                            <button class="modal-close">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="form-label">Search by</label>
+                                <input type="text" class="form-input" placeholder="Patient ID, Name, or Phone Number">
+                            </div>
+                            <button class="btn btn-primary" style="width: 100%;">Search</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Tables -->
+        <div class="design-section">
+            <div class="section-header">
+                <h2 class="section-title">Data Tables</h2>
+                <p class="section-subtitle">Patient records and data display</p>
+            </div>
+            <div class="section-content">
+                <div class="component-demo">
+                    <h3 class="demo-title">Patient Registry</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Patient ID</th>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Type</th>
+                                <th>Registration Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>HIS-2024-001</td>
+                                <td>John Doe</td>
+                                <td>35</td>
+                                <td>Outpatient</td>
+                                <td>2024-01-15</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm">Edit</button>
+                                    <button class="btn btn-primary btn-sm">View</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>HIS-2024-002</td>
+                                <td>Jane Smith</td>
+                                <td>28</td>
+                                <td>Inpatient</td>
+                                <td>2024-01-15</td>
+                                <td><span class="badge badge-warning">Pending</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm">Edit</button>
+                                    <button class="btn btn-primary btn-sm">View</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>HIS-2024-003</td>
+                                <td>Robert Johnson</td>
+                                <td>42</td>
+                                <td>Outpatient</td>
+                                <td>2024-01-14</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm">Edit</button>
+                                    <button class="btn btn-primary btn-sm">View</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Indicators -->
+        <div class="design-section">
+            <div class="section-header">
+                <h2 class="section-title">Status Indicators</h2>
+                <p class="section-subtitle">Badges and status elements</p>
+            </div>
+            <div class="section-content">
+                <div class="component-demo">
+                    <h3 class="demo-title">Patient Status Badges</h3>
+                    <div style="display: flex; gap: var(--spacing-3); flex-wrap: wrap; margin-bottom: var(--spacing-4);">
+                        <span class="badge badge-success">Active</span>
+                        <span class="badge badge-warning">Pending</span>
+                        <span class="badge badge-error">Inactive</span>
+                        <span class="badge badge-info">Under Review</span>
+                    </div>
+                    
+                    <h3 class="demo-title">Registration Type Badges</h3>
+                    <div style="display: flex; gap: var(--spacing-3); flex-wrap: wrap;">
+                        <span class="badge badge-info">Inpatient</span>
+                        <span class="badge badge-success">Outpatient</span>
+                        <span class="badge badge-warning">Emergency</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
