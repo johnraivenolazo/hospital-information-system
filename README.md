@@ -6,5 +6,5 @@ See the [Requirements](requirements.md) document for detailed project requiremen
 ## Members
 
 - Duque, Boris Gamaliel
-- Olazo, John Raiven D.
+- Olazo, John Raiven
 
