@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>HIS — Appointments</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root { --bg:#f8fafc; --card:#fff; --text:#111827; --muted:#6b7280; --accent:#2563eb; --border:#e5e7eb; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; background:var(--bg); color:var(--text); }
+    header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:#fff; border-bottom:1px solid var(--border); position:sticky; top:0; }
+    nav a { margin-right:12px; color:var(--text); text-decoration:none; padding:8px 10px; border-radius:8px; }
+    nav a.active, nav a:hover { background:#eff6ff; color:#0b53d6; }
+    main { display:grid; grid-template-columns: 280px 1fr; gap:16px; padding:16px; }
+    .panel { background:#fff; border:1px solid var(--border); border-radius:12px; padding:12px; }
+    .calendar { display:grid; grid-template-columns: repeat(7, 1fr); gap:8px; }
+    .day { border:1px dashed var(--border); border-radius:8px; min-height:120px; padding:8px; }
+    .badge { font-size:12px; color:#1f2937; background:#e5e7eb; padding:2px 6px; border-radius:6px; }
+    .controls { display:flex; gap:8px; margin-bottom:12px; }
+    input, select, button { padding:8px 10px; border:1px solid var(--border); border-radius:8px; font-size:14px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>HIS</div>
+    <nav>
+      <a href="index.html">Dashboard</a>
+      <a href="patients.html">Patients</a>
+      <a class="active" href="appointments.html">Appointments</a>
+      <a href="labs.html">Orders & Labs</a>
+      <a href="admin.html">Admin</a>
+      <a href="login.html">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="panel" aria-label="Create appointment">
+      <h2>New appointment</h2>
+      <div class="controls">
+        <input type="text" placeholder="Search patient (MRN/Name)">
+        <select>
+          <option>Provider: Any</option>
+          <option>Dr. Reyes</option>
+          <option>Dr. Santos</option>
+        </select>
+        <select>
+          <option>Reason: Consult</option>
+          <option>Follow-up</option>
+          <option>Lab</option>
+        </select>
+        <button>Create</button>
+      </div>
+      <p style="color:#6b7280;">Conflicts auto-flagged; double-booking blocked</p>
+    </section>
+
+    <section class="panel" aria-label="Calendar">
+      <h2>Calendar — Week view</h2>
+      <div class="calendar">
+        <div class="day"><strong>Mon</strong><div class="badge">9:00 Ana</div><div class="badge">10:30 Mark</div></div>
+        <div class="day"><strong>Tue</strong><div class="badge">8:30 Liza</div></div>
+        <div class="day"><strong>Wed</strong><div class="badge">9:00 Ana</div></div>
+        <div class="day"><strong>Thu</strong><div class="badge">—</div></div>
+        <div class="day"><strong>Fri</strong><div class="badge">11:00 Mark</div></div>
+        <div class="day"><strong>Sat</strong><div class="badge">—</div></div>
+        <div class="day"><strong>Sun</strong><div class="badge">—</div></div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

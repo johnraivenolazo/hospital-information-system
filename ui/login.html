@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>HIS — Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root { --bg:#f6f7f9; --card:#fff; --text:#222; --muted:#6b7280; --accent:#2563eb; --border:#e5e7eb; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; background:var(--bg); color:var(--text); }
+    header { padding:24px; text-align:center; }
+    main { display:grid; place-items:center; min-height:70vh; padding:16px; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:12px; width:100%; max-width:420px; padding:24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    h1 { margin:0 0 8px; font-size:24px; }
+    p { margin:0 0 16px; color:var(--muted); }
+    label { display:block; font-size:14px; margin:12px 0 6px; }
+    input { width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:8px; font-size:14px; }
+    .actions { display:flex; gap:12px; margin-top:16px; }
+    .btn { display:inline-block; padding:10px 14px; border-radius:8px; border:1px solid var(--border); font-weight:600; text-decoration:none; text-align:center; }
+    .btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+    .footer { text-align:center; padding:16px; color:var(--muted); font-size:12px; }
+    nav a { color:var(--accent); text-decoration:none; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Hospital Information System</h1>
+    <p>Secure access for staff and providers</p>
+  </header>
+
+  <main>
+    <section class="card" aria-label="Login form">
+      <h1>Sign in</h1>
+      <p>Use your assigned credentials</p>
+      <form>
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" placeholder="e.g., j.olazo" aria-required="true">
+
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" placeholder="••••••••" aria-required="true">
+
+        <div class="actions">
+          <a class="btn btn-primary" href="index.html" role="button" aria-label="Login">Login</a>
+          <a class="btn" href="#" aria-label="Forgot password">Forgot password</a>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <div class="footer">© 2025 HIS</div>
+</body>
+</html>

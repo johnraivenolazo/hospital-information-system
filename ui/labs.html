@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>HIS — Orders & Labs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root { --bg:#f8fafc; --card:#fff; --text:#111827; --muted:#6b7280; --accent:#2563eb; --border:#e5e7eb; --warn:#ef4444; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; background:var(--bg); color:var(--text); }
+    header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:#fff; border-bottom:1px solid var(--border); position:sticky; top:0; }
+    nav a { margin-right:12px; color:var(--text); text-decoration:none; padding:8px 10px; border-radius:8px; }
+    nav a.active, nav a:hover { background:#eff6ff; color:#0b53d6; }
+    main { display:grid; grid-template-columns: 360px 1fr; gap:16px; padding:16px; }
+    .panel { background:#fff; border:1px solid var(--border); border-radius:12px; padding:12px; }
+    input, select, button { padding:8px 10px; border:1px solid var(--border); border-radius:8px; font-size:14px; }
+    .form { display:grid; gap:8px; }
+    table { width:100%; border-collapse:collapse; }
+    th, td { border:1px dashed var(--border); padding:8px; text-align:left; font-size:14px; }
+    .abn { color:#fff; background:var(--warn); padding:2px 6px; border-radius:6px; font-size:12px; }
+    .muted { color:var(--muted); font-size:12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>HIS</div>
+    <nav>
+      <a href="index.html">Dashboard</a>
+      <a href="patients.html">Patients</a>
+      <a href="appointments.html">Appointments</a>
+      <a class="active" href="labs.html">Orders & Labs</a>
+      <a href="admin.html">Admin</a>
+      <a href="login.html">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="panel" aria-label="Order entry">
+      <h2>New lab order</h2>
+      <div class="form">
+        <input type="text" placeholder="Patient (MRN/Name)">
+        <select>
+          <option>Test: CBC</option>
+          <option>Chemistry Panel</option>
+          <option>Urinalysis</option>
+        </select>
+        <select>
+          <option>Priority: Routine</option>
+          <option>Stat</option>
+        </select>
+        <input type="text" placeholder="Notes">
+        <button>Place order</button>
+        <p class="muted">Specimen tracking and barcode printing available</p>
+      </div>
+    </section>
+
+    <section class="panel" aria-label="Result entry">
+      <h2>Result entry — CBC</h2>
+      <table aria-label="CBC results">
+        <thead>
+          <tr><th>Parameter</th><th>Value</th><th>Unit</th><th>Reference</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>WBC</td><td>12.1</td><td>x10^9/L</td><td>4.0–11.0</td><td><span class="abn">High</span></td></tr>
+          <tr><td>RBC</td><td>4.7</td><td>x10^12/L</td><td>4.2–5.4</td><td>Normal</td></tr>
+          <tr><td>Hgb</td><td>10.8</td><td>g/dL</td><td>12.0–15.5</td><td><span class="abn">Low</span></td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:12px;">
+        <button>Validate</button>
+        <button>Publish</button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

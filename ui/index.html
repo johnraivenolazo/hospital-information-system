@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>HIS - Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root { --bg:#f8fafc; --card:#fff; --text:#111827; --muted:#6b7280; --accent:#2563eb; --border:#e5e7eb; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; background:var(--bg); color:var(--text); }
+    header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:#fff; border-bottom:1px solid var(--border); position:sticky; top:0; }
+    .brand { font-weight:700; }
+    nav a { margin-right:12px; color:var(--text); text-decoration:none; padding:8px 10px; border-radius:8px; }
+    nav a.active, nav a:hover { background:#eff6ff; color:#0b53d6; }
+    main { display:grid; grid-template-columns: 280px 1fr; gap:16px; padding:16px; }
+    aside { background:#fff; border:1px solid var(--border); border-radius:12px; padding:12px; }
+    .card { background:#fff; border:1px solid var(--border); border-radius:12px; padding:12px; }
+    h2 { margin:8px 0 12px; font-size:18px; }
+    .list { display:grid; gap:8px; }
+    .item { display:flex; justify-content:space-between; padding:8px; border:1px dashed var(--border); border-radius:8px; }
+    .status { font-size:12px; color:#065f46; background:#ecfdf5; padding:2px 6px; border-radius:6px; }
+    .muted { color:var(--muted); font-size:12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">HIS</div>
+    <nav aria-label="Main navigation">
+      <a class="active" href="index.html">Dashboard</a>
+      <a href="patients.html">Patients</a>
+      <a href="appointments.html">Appointments</a>
+      <a href="labs.html">Orders & Labs</a>
+      <a href="admin.html">Admin</a>
+      <a href="login.html">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <aside aria-label="Quick actions">
+      <h2>Quick actions</h2>
+      <div class="list">
+        <div class="item">
+          <span>Register new patient</span>
+          <a href="patients.html" class="muted">Open</a>
+        </div>
+        <div class="item">
+          <span>Create appointment</span>
+          <a href="appointments.html" class="muted">Open</a>
+        </div>
+        <div class="item">
+          <span>Order lab test</span>
+          <a href="labs.html" class="muted">Open</a>
+        </div>
+      </div>
+
+      <h2 style="margin-top:16px;">Notifications</h2>
+      <div class="list">
+        <div class="item">
+          <span>Abnormal lab (CBC) for P-10234</span>
+          <span class="status">Attention</span>
+        </div>
+        <div class="item">
+          <span>2 appointments pending confirmation</span>
+          <span class="status">Pending</span>
+        </div>
+      </div>
+    </aside>
+
+    <section class="card" aria-label="Role-based summary">
+      <h2>Today’s overview</h2>
+      <div class="list">
+        <div class="item"><strong>Reception:</strong> 18 check-ins • 3 no-shows <span class="muted">Queue moving</span></div>
+        <div class="item"><strong>Doctors:</strong> 12 consults • 5 labs pending <span class="muted">2 urgent</span></div>
+        <div class="item"><strong>Billing:</strong> 9 invoices • 2 disputes <span class="muted">Follow-up</span></div>
+      </div>
+
+      <h2 style="margin-top:16px;">Lab results pending</h2>
+      <div class="list">
+        <div class="item"><span>P-10234 • CBC</span><span class="status">Pending</span></div>
+        <div class="item"><span>P-10677 • Chemistry Panel</span><span class="status">Pending</span></div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

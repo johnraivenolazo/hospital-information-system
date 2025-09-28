@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>HIS — Patients</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root { --bg:#f8fafc; --card:#fff; --text:#111827; --muted:#6b7280; --accent:#2563eb; --border:#e5e7eb; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; background:var(--bg); color:var(--text); }
+    header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:#fff; border-bottom:1px solid var(--border); position:sticky; top:0; }
+    nav a { margin-right:12px; color:var(--text); text-decoration:none; padding:8px 10px; border-radius:8px; }
+    nav a.active, nav a:hover { background:#eff6ff; color:#0b53d6; }
+    main { display:grid; grid-template-columns: 320px 1fr; gap:16px; padding:16px; }
+    .panel { background:#fff; border:1px solid var(--border); border-radius:12px; padding:12px; }
+    .search { display:flex; gap:8px; }
+    input, select, button { padding:8px 10px; border:1px solid var(--border); border-radius:8px; font-size:14px; }
+    .list { margin-top:12px; display:grid; gap:8px; }
+    .item { padding:8px; border:1px dashed var(--border); border-radius:8px; display:flex; justify-content:space-between; }
+    .tabs { display:flex; gap:8px; margin-bottom:12px; }
+    .tab { padding:8px 10px; border:1px solid var(--border); border-radius:8px; background:#fff; }
+    .grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; }
+    label { font-size:12px; color:var(--muted); }
+    .value { font-weight:600; }
+    .alert { background:#fef3c7; color:#92400e; padding:6px 10px; border-radius:8px; font-size:12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>HIS</div>
+    <nav>
+      <a href="index.html">Dashboard</a>
+      <a class="active" href="patients.html">Patients</a>
+      <a href="appointments.html">Appointments</a>
+      <a href="labs.html">Orders & Labs</a>
+      <a href="admin.html">Admin</a>
+      <a href="login.html">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="panel" aria-label="Patients list">
+      <h2>Patients</h2>
+      <div class="search">
+        <input type="text" placeholder="Search by name or MRN">
+        <select>
+          <option>All</option>
+          <option>In queue</option>
+          <option>Admitted</option>
+          <option>Discharged</option>
+        </select>
+        <button>New patient</button>
+      </div>
+
+      <div class="list">
+        <div class="item"><span>P-10234 • Ana Dela Cruz</span><a href="#">Open</a></div>
+        <div class="item"><span>P-10677 • Mark Santos</span><a href="#">Open</a></div>
+        <div class="item"><span>P-11001 • Liza Tan</span><a href="#">Open</a></div>
+      </div>
+    </section>
+
+    <section class="panel" aria-label="Patient profile">
+      <h2>Patient profile</h2>
+      <div class="alert">Allergy: Penicillin • Critical alert</div>
+
+      <div class="tabs" role="tablist" aria-label="Patient tabs">
+        <button class="tab" role="tab" aria-selected="true">Overview</button>
+        <button class="tab" role="tab">Encounters</button>
+        <button class="tab" role="tab">Labs</button>
+        <button class="tab" role="tab">Billing</button>
+      </div>
+
+      <div class="grid">
+        <div>
+          <label>MRN</label>
+          <div class="value">P-10234</div>
+        </div>
+        <div>
+          <label>Name</label>
+          <div class="value">Ana Dela Cruz</div>
+        </div>
+        <div>
+          <label>DOB</label>
+          <div class="value">1991-03-14</div>
+        </div>
+        <div>
+          <label>Contact</label>
+          <div class="value">+63 912 345 6789</div>
+        </div>
+        <div>
+          <label>Last encounter</label>
+          <div class="value">OPD • 2025-09-25</div>
+        </div>
+        <div>
+          <label>Outstanding balance</label>
+          <div class="value">₱ 1,250.00</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
