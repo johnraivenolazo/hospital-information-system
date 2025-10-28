@@ -51,6 +51,17 @@ The system handles details from every department, including doctors, staffs, spe
 - Provide bill history and receipts.
 - Integrate with patient records for accurate billing.
 
+## Additional Requirements (Per Module)
+
+### Registration Module - Patient Medical History
+- **Patient Information Display**: Show patient information with indicator if there is no medical history.
+- **Diagnostic Imaging Records**: Maintain traceable records of X-rays, MRI, CT scans, and other diagnostic imaging.
+- **Allergy List**: Comprehensive list of allergies that a patient has, including severity and reaction details.
+- **Previous Medicine Intakes**: Track and display previous medicine intakes of the patient with dosage, duration, and dates.
+
+### Doctor Consultation and Diagnosis Module - Appointments
+- **Sampling of Doctors**: Display and filter available doctors according to the appointment requirements (specialization, availability, schedule).
+
 ## Non-Functional Requirements
 - **Usability**: Easy-to-use interfaces for all user types.
 - **Performance**: System should handle multiple users without slowdown.
