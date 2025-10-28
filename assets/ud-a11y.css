@@ -1,3 +1,13 @@
+/* Global Layout Fixes */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 /* Skip to Main Content Link */
 .skip-link {
   position: fixed;

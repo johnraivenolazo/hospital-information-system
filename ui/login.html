@@ -22,10 +22,12 @@
       background:var(--bg);
       color:var(--text);
       line-height: 1.6;
+      overflow-x: hidden;
     }
     header {
       padding:24px;
       text-align:center;
+      overflow-x: hidden;
     }
     main {
       display:grid;
@@ -41,6 +43,7 @@
       max-width:420px;
       padding:24px;
       box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      margin: 0 16px;
     }
     h1 {
       margin:0 0 8px;
@@ -154,6 +157,32 @@
       background: var(--accent);
       color: #fff;
       border-color: var(--accent);
+    }
+    @media (max-width: 768px) {
+      header {
+        padding: 16px;
+      }
+      .card {
+        padding: 20px;
+        margin: 0 8px;
+      }
+      .a11y-toolbar {
+        flex-direction: column;
+      }
+      .a11y-toggle {
+        width: 100%;
+      }
+    }
+    @media (max-width: 480px) {
+      .card {
+        padding: 16px;
+      }
+      .actions {
+        flex-direction: column;
+      }
+      .btn {
+        width: 100%;
+      }
     }
   </style>
 </head>

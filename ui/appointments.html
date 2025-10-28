@@ -66,11 +66,19 @@
     }
     main {
       display:grid;
-      grid-template-columns: 280px 1fr;
+      grid-template-columns: 320px 1fr;
+      grid-template-rows: auto auto;
       gap:16px;
       padding:16px;
       max-width: 1400px;
       margin: 0 auto;
+    }
+    .doctor-panel {
+      grid-row: 1 / 3;
+    }
+    .calendar-panel {
+      grid-column: 2;
+      grid-row: 2;
     }
     .panel {
       background:#fff;
@@ -90,12 +98,20 @@
       display:grid;
       grid-template-columns: repeat(7, 1fr);
       gap:8px;
+      overflow-x: auto;
     }
     .day {
       border:1px dashed var(--border);
       border-radius:8px;
       min-height:120px;
       padding:8px;
+      min-width: 100px;
+    }
+    .day strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: var(--text);
     }
     .badge {
       font-size:12px;
@@ -111,6 +127,10 @@
       gap:8px;
       margin-bottom:12px;
       flex-wrap: wrap;
+      width: 100%;
+    }
+    .controls > * {
+      min-width: 0;
     }
     .controls label:not(.sr-only) {
       display: block;
@@ -182,16 +202,117 @@
       color: #fff;
       border-color: var(--accent);
     }
-    @media (max-width: 768px) {
+    .doctor-list {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .doctor-card {
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .doctor-card:hover {
+      border-color: var(--accent);
+      background: #eff6ff;
+    }
+    .doctor-card.selected {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+    .doctor-name {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    .doctor-specialty {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .doctor-card.selected .doctor-specialty {
+      color: rgba(255, 255, 255, 0.9);
+    }
+    .doctor-schedule {
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .doctor-card.selected .doctor-schedule {
+      color: rgba(255, 255, 255, 0.8);
+    }
+    .availability-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    .available {
+      background: rgba(34, 197, 94, 0.1);
+      color: #166534;
+      border: 1px solid #22c55e;
+    }
+    .busy {
+      background: rgba(239, 68, 68, 0.1);
+      color: #991b1b;
+      border: 1px solid #ef4444;
+    }
+    .doctor-card.selected .availability-badge {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+    .filter-section {
+      margin-bottom: 12px;
+      width: 100%;
+    }
+    .filter-section input,
+    .filter-section select {
+      width: 100%;
+    }
+    .filter-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    @media (max-width: 1024px) {
       main {
         grid-template-columns: 1fr;
+        grid-template-rows: auto;
       }
+      .doctor-panel {
+        grid-row: auto;
+      }
+      .calendar-panel {
+        grid-column: 1;
+        grid-row: auto;
+      }
+      .calendar {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      }
+    }
+    @media (max-width: 768px) {
       header {
         flex-direction: column;
         align-items: stretch;
       }
       nav, .a11y-toolbar {
         justify-content: center;
+      }
+      .calendar {
+        grid-template-columns: 1fr;
+      }
+      .day {
+        min-width: auto;
       }
     }
   </style>
@@ -215,16 +336,97 @@
   </header>
 
   <main id="main">
+    <section class="panel doctor-panel" aria-label="Doctor Selection and Filters">
+      <h2>Find a Doctor</h2>
+      
+      <div class="filter-section">
+        <label for="specialization" class="filter-label">Specialization</label>
+        <select id="specialization" aria-label="Filter by specialization">
+          <option value="">All Specializations</option>
+          <option value="cardiology">Cardiology</option>
+          <option value="internal">Internal Medicine</option>
+          <option value="pediatrics">Pediatrics</option>
+          <option value="surgery">General Surgery</option>
+          <option value="orthopedics">Orthopedics</option>
+          <option value="dermatology">Dermatology</option>
+        </select>
+      </div>
+
+      <div class="filter-section">
+        <label for="availability" class="filter-label">Availability</label>
+        <select id="availability" aria-label="Filter by availability">
+          <option value="">All Doctors</option>
+          <option value="available">Available Today</option>
+          <option value="tomorrow">Available Tomorrow</option>
+          <option value="week">This Week</option>
+        </select>
+      </div>
+
+      <div class="filter-section">
+        <label for="appointmentDate" class="filter-label">Preferred Date</label>
+        <input type="date" id="appointmentDate" aria-label="Select appointment date">
+      </div>
+
+      <div class="doctor-list" role="list" aria-label="Available doctors">
+        <div class="doctor-card" role="listitem" tabindex="0" aria-label="Dr. Juan Reyes, Cardiologist">
+          <div class="doctor-name">Dr. Juan Reyes</div>
+          <div class="doctor-specialty">🫀 Cardiology</div>
+          <div class="doctor-schedule">Mon-Fri: 9:00 AM - 5:00 PM</div>
+          <span class="availability-badge available">Available</span>
+        </div>
+
+        <div class="doctor-card" role="listitem" tabindex="0" aria-label="Dr. Maria Santos, Internal Medicine">
+          <div class="doctor-name">Dr. Maria Santos</div>
+          <div class="doctor-specialty">🩺 Internal Medicine</div>
+          <div class="doctor-schedule">Mon-Wed-Fri: 8:00 AM - 4:00 PM</div>
+          <span class="availability-badge available">Available</span>
+        </div>
+
+        <div class="doctor-card" role="listitem" tabindex="0" aria-label="Dr. Ana Cruz, Pediatrics">
+          <div class="doctor-name">Dr. Ana Cruz</div>
+          <div class="doctor-specialty">👶 Pediatrics</div>
+          <div class="doctor-schedule">Tue-Thu-Sat: 10:00 AM - 6:00 PM</div>
+          <span class="availability-badge busy">Busy</span>
+        </div>
+
+        <div class="doctor-card" role="listitem" tabindex="0" aria-label="Dr. Roberto Lim, General Surgery">
+          <div class="doctor-name">Dr. Roberto Lim</div>
+          <div class="doctor-specialty">🔪 General Surgery</div>
+          <div class="doctor-schedule">Mon-Thu: 7:00 AM - 3:00 PM</div>
+          <span class="availability-badge available">Available</span>
+        </div>
+
+        <div class="doctor-card" role="listitem" tabindex="0" aria-label="Dr. Sofia Garcia, Orthopedics">
+          <div class="doctor-name">Dr. Sofia Garcia</div>
+          <div class="doctor-specialty">🦴 Orthopedics</div>
+          <div class="doctor-schedule">Mon-Wed-Fri: 9:00 AM - 5:00 PM</div>
+          <span class="availability-badge available">Available</span>
+        </div>
+
+        <div class="doctor-card" role="listitem" tabindex="0" aria-label="Dr. Carlos Tan, Dermatology">
+          <div class="doctor-name">Dr. Carlos Tan</div>
+          <div class="doctor-specialty">💊 Dermatology</div>
+          <div class="doctor-schedule">Tue-Fri: 11:00 AM - 7:00 PM</div>
+          <span class="availability-badge available">Available</span>
+        </div>
+      </div>
+    </section>
+
     <section class="panel" aria-label="Create appointment">
       <h2>New Appointment</h2>
       <form class="controls">
         <label for="patientSearch" class="sr-only">Search patient by MRN or name</label>
         <input id="patientSearch" type="text" placeholder="Search patient (MRN/Name)" aria-label="Patient search">
-        <label for="provider" class="sr-only">Provider</label>
-        <select id="provider" aria-label="Select provider">
-          <option>Provider: Any</option>
-          <option>Dr. Reyes</option>
-          <option>Dr. Santos</option>
+        <label for="selectedDoctor" class="sr-only">Selected Doctor</label>
+        <input id="selectedDoctor" type="text" placeholder="Select doctor from left panel" aria-label="Selected doctor" readonly>
+        <label for="timeSlot" class="sr-only">Time Slot</label>
+        <select id="timeSlot" aria-label="Select time slot">
+          <option>9:00 AM</option>
+          <option>10:00 AM</option>
+          <option>11:00 AM</option>
+          <option>2:00 PM</option>
+          <option>3:00 PM</option>
+          <option>4:00 PM</option>
         </select>
         <label for="reason" class="sr-only">Reason</label>
         <select id="reason" aria-label="Appointment reason">
@@ -237,7 +439,7 @@
       <p style="color:#6b7280; font-size: 14px; margin-top: 12px;" aria-live="polite">Conflicts auto-flagged; double-booking blocked</p>
     </section>
 
-    <section class="panel" aria-label="Weekly calendar view">
+    <section class="panel calendar-panel" aria-label="Weekly calendar view">
       <h2>Calendar — Week View</h2>
       <div class="calendar" role="table" aria-label="Weekly appointment calendar">
         <div class="day">

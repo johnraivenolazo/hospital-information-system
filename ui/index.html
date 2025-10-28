@@ -142,6 +142,7 @@
       display: grid;
       grid-template-columns: 320px 1fr;
       gap: var(--spacing-6);
+      overflow-x: hidden;
     }
 
     aside {
@@ -296,6 +297,7 @@
     @media (max-width: 1024px) {
       main {
         grid-template-columns: 1fr;
+        padding: var(--spacing-4);
       }
     }
 
@@ -303,6 +305,7 @@
       header {
         flex-direction: column;
         align-items: stretch;
+        padding: var(--spacing-3);
       }
 
       nav, .a11y-toolbar {
@@ -310,6 +313,14 @@
       }
 
       main {
+        padding: var(--spacing-3);
+      }
+      
+      .card {
+        padding: var(--spacing-4);
+      }
+      
+      aside {
         padding: var(--spacing-4);
       }
     }

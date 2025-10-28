@@ -109,12 +109,14 @@
       display: grid;
       grid-template-columns: 360px 1fr;
       gap: var(--spacing-6);
+      overflow-x: hidden;
     }
     .panel {
       background: var(--white);
       border-radius: var(--radius-xl);
       box-shadow: var(--shadow-md);
       padding: var(--spacing-6);
+      overflow-x: auto;
     }
     h2 {
       font-size: var(--font-size-lg);
@@ -215,6 +217,8 @@
       gap: var(--spacing-2);
       margin-bottom: var(--spacing-4);
       flex-wrap: wrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
     .tab {
       padding: var(--spacing-3) var(--spacing-4);
@@ -251,13 +255,110 @@
       font-weight: 600;
       color: var(--gray-800);
     }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: var(--spacing-3);
+      min-width: 600px;
+    }
+    .table-wrapper {
+      overflow-x: auto;
+      margin: var(--spacing-3) 0;
+    }
+    th, td {
+      padding: var(--spacing-3);
+      text-align: left;
+      border-bottom: 1px solid var(--gray-200);
+      font-size: var(--font-size-sm);
+    }
+    th {
+      background: var(--gray-50);
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+    tr:hover {
+      background: var(--gray-50);
+    }
+    .severity-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-md);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .severity-critical {
+      background: rgba(220, 38, 38, 0.1);
+      color: #991b1b;
+      border: 1px solid #dc2626;
+    }
+    .severity-moderate {
+      background: rgba(245, 158, 11, 0.1);
+      color: #92400e;
+      border: 1px solid #f59e0b;
+    }
+    .severity-mild {
+      background: rgba(34, 197, 94, 0.1);
+      color: #166534;
+      border: 1px solid #22c55e;
+    }
+    .no-data {
+      text-align: center;
+      padding: var(--spacing-6);
+      color: var(--gray-600);
+      font-style: italic;
+    }
+    .no-data-icon {
+      font-size: 3rem;
+      margin-bottom: var(--spacing-3);
+      opacity: 0.5;
+    }
+    .allergy-item {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-3);
+      margin-bottom: var(--spacing-3);
+    }
+    .allergy-name {
+      font-weight: 600;
+      font-size: var(--font-size-base);
+      margin-bottom: var(--spacing-2);
+    }
+    .allergy-details {
+      font-size: var(--font-size-sm);
+      color: var(--gray-600);
+      margin-top: var(--spacing-2);
+    }
     @media (max-width: 1024px) {
-      main { grid-template-columns: 1fr; }
+      main { 
+        grid-template-columns: 1fr;
+        padding: var(--spacing-4);
+      }
     }
     @media (max-width: 768px) {
-      header { flex-direction: column; align-items: stretch; }
-      nav, .a11y-toolbar { justify-content: center; }
-      .search-form { flex-direction: column; }
+      header { 
+        flex-direction: column; 
+        align-items: stretch;
+        padding: var(--spacing-3);
+      }
+      nav, .a11y-toolbar { 
+        justify-content: center;
+      }
+      .search-form { 
+        flex-direction: column;
+      }
+      .panel {
+        padding: var(--spacing-4);
+      }
+      .tabs {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+      }
+      .tab {
+        white-space: nowrap;
+        min-width: auto;
+      }
     }
   </style>
 </head>
@@ -313,6 +414,10 @@
       <div class="alert" role="alert">⚠️ Allergy: Penicillin • Critical Alert</div>
       <div class="tabs" role="tablist" aria-label="Patient information tabs">
         <button id="tab-overview" class="tab" role="tab" aria-selected="true" aria-controls="panel-overview">Overview</button>
+        <button id="tab-medical" class="tab" role="tab" aria-selected="false" aria-controls="panel-medical">Medical History</button>
+        <button id="tab-allergies" class="tab" role="tab" aria-selected="false" aria-controls="panel-allergies">Allergies</button>
+        <button id="tab-imaging" class="tab" role="tab" aria-selected="false" aria-controls="panel-imaging">Imaging</button>
+        <button id="tab-medications" class="tab" role="tab" aria-selected="false" aria-controls="panel-medications">Medications</button>
         <button id="tab-encounters" class="tab" role="tab" aria-selected="false" aria-controls="panel-encounters">Encounters</button>
         <button id="tab-labs" class="tab" role="tab" aria-selected="false" aria-controls="panel-labs">Labs</button>
         <button id="tab-billing" class="tab" role="tab" aria-selected="false" aria-controls="panel-billing">Billing</button>
@@ -345,14 +450,309 @@
           </div>
         </div>
       </div>
+
+      <div id="panel-medical" role="tabpanel" aria-labelledby="tab-medical" hidden>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Blood Type</label>
+            <div class="value">O+</div>
+          </div>
+          <div class="info-item">
+            <label>Height</label>
+            <div class="value">165 cm</div>
+          </div>
+          <div class="info-item">
+            <label>Weight</label>
+            <div class="value">58 kg</div>
+          </div>
+          <div class="info-item">
+            <label>BMI</label>
+            <div class="value">21.3 (Normal)</div>
+          </div>
+        </div>
+        <h3 style="margin-top: 1.5rem; margin-bottom: 0.75rem; font-size: 1rem; font-weight: 600;">Chronic Conditions</h3>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Condition</th>
+              <th scope="col">Diagnosed</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Hypertension</td>
+              <td>2019-03-15</td>
+              <td>Controlled</td>
+            </tr>
+            <tr>
+              <td>Type 2 Diabetes</td>
+              <td>2020-07-22</td>
+              <td>Managed</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="panel-allergies" role="tabpanel" aria-labelledby="tab-allergies" hidden>
+        <div class="allergy-item">
+          <div class="allergy-name">
+            🚨 Penicillin 
+            <span class="severity-badge severity-critical">Critical</span>
+          </div>
+          <div class="allergy-details">
+            <strong>Reaction:</strong> Anaphylaxis, severe hives, difficulty breathing<br>
+            <strong>Documented:</strong> 2018-05-12<br>
+            <strong>Verified by:</strong> Dr. Maria Santos
+          </div>
+        </div>
+        <div class="allergy-item">
+          <div class="allergy-name">
+            ⚠️ Sulfa Drugs 
+            <span class="severity-badge severity-moderate">Moderate</span>
+          </div>
+          <div class="allergy-details">
+            <strong>Reaction:</strong> Skin rash, itching<br>
+            <strong>Documented:</strong> 2020-11-03<br>
+            <strong>Verified by:</strong> Dr. Juan Reyes
+          </div>
+        </div>
+        <div class="allergy-item">
+          <div class="allergy-name">
+            ℹ️ Shellfish 
+            <span class="severity-badge severity-mild">Mild</span>
+          </div>
+          <div class="allergy-details">
+            <strong>Reaction:</strong> Mild digestive discomfort<br>
+            <strong>Documented:</strong> 2015-08-20<br>
+            <strong>Verified by:</strong> Patient self-reported
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-imaging" role="tabpanel" aria-labelledby="tab-imaging" hidden>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Type</th>
+              <th scope="col">Body Part</th>
+              <th scope="col">Findings</th>
+              <th scope="col">Ordered By</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2025-10-15</td>
+              <td>Chest X-Ray</td>
+              <td>Chest</td>
+              <td>Clear lung fields</td>
+              <td>Dr. Reyes</td>
+              <td><button class="btn" aria-label="View chest x-ray image">View</button></td>
+            </tr>
+            <tr>
+              <td>2025-08-22</td>
+              <td>MRI</td>
+              <td>Brain</td>
+              <td>No abnormalities detected</td>
+              <td>Dr. Santos</td>
+              <td><button class="btn" aria-label="View brain MRI scan">View</button></td>
+            </tr>
+            <tr>
+              <td>2024-12-10</td>
+              <td>CT Scan</td>
+              <td>Abdomen</td>
+              <td>Normal scan</td>
+              <td>Dr. Cruz</td>
+              <td><button class="btn" aria-label="View abdominal CT scan">View</button></td>
+            </tr>
+            <tr>
+              <td>2024-06-05</td>
+              <td>Ultrasound</td>
+              <td>Abdomen</td>
+              <td>Gallbladder polyp (5mm)</td>
+              <td>Dr. Lim</td>
+              <td><button class="btn" aria-label="View abdominal ultrasound">View</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="panel-medications" role="tabpanel" aria-labelledby="tab-medications" hidden>
+        <h3 style="margin-bottom: 0.75rem; font-size: 1rem; font-weight: 600;">Current Medications</h3>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Medication</th>
+              <th scope="col">Dosage</th>
+              <th scope="col">Frequency</th>
+              <th scope="col">Started</th>
+              <th scope="col">Prescribed By</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Losartan</td>
+              <td>50mg</td>
+              <td>Once daily</td>
+              <td>2019-03-15</td>
+              <td>Dr. Santos</td>
+            </tr>
+            <tr>
+              <td>Metformin</td>
+              <td>500mg</td>
+              <td>Twice daily</td>
+              <td>2020-07-22</td>
+              <td>Dr. Reyes</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 style="margin-top: 1.5rem; margin-bottom: 0.75rem; font-size: 1rem; font-weight: 600;">Previous Medications</h3>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Medication</th>
+              <th scope="col">Dosage</th>
+              <th scope="col">Duration</th>
+              <th scope="col">Dates</th>
+              <th scope="col">Reason Stopped</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Amoxicillin</td>
+              <td>500mg</td>
+              <td>7 days</td>
+              <td>2024-09-10 to 2024-09-17</td>
+              <td>Course completed</td>
+            </tr>
+            <tr>
+              <td>Ibuprofen</td>
+              <td>400mg</td>
+              <td>5 days</td>
+              <td>2024-08-05 to 2024-08-10</td>
+              <td>Symptoms resolved</td>
+            </tr>
+            <tr>
+              <td>Omeprazole</td>
+              <td>20mg</td>
+              <td>30 days</td>
+              <td>2024-05-01 to 2024-05-30</td>
+              <td>Treatment completed</td>
+            </tr>
+            <tr>
+              <td>Atorvastatin</td>
+              <td>10mg</td>
+              <td>6 months</td>
+              <td>2023-01-15 to 2023-07-15</td>
+              <td>Switched to lifestyle management</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <div id="panel-encounters" role="tabpanel" aria-labelledby="tab-encounters" hidden>
-        <p>Encounter history will be displayed here.</p>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Type</th>
+              <th scope="col">Provider</th>
+              <th scope="col">Diagnosis</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2025-09-25</td>
+              <td>OPD</td>
+              <td>Dr. Reyes</td>
+              <td>Routine checkup</td>
+              <td><button class="btn" aria-label="View encounter details">View</button></td>
+            </tr>
+            <tr>
+              <td>2025-06-14</td>
+              <td>OPD</td>
+              <td>Dr. Santos</td>
+              <td>Hypertension follow-up</td>
+              <td><button class="btn" aria-label="View encounter details">View</button></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+
       <div id="panel-labs" role="tabpanel" aria-labelledby="tab-labs" hidden>
-        <p>Lab results will be displayed here.</p>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Test</th>
+              <th scope="col">Result</th>
+              <th scope="col">Status</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2025-10-20</td>
+              <td>Complete Blood Count</td>
+              <td>Normal</td>
+              <td>Finalized</td>
+              <td><button class="btn" aria-label="View lab results">View</button></td>
+            </tr>
+            <tr>
+              <td>2025-09-15</td>
+              <td>HbA1c</td>
+              <td>6.5%</td>
+              <td>Finalized</td>
+              <td><button class="btn" aria-label="View lab results">View</button></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+
       <div id="panel-billing" role="tabpanel" aria-labelledby="tab-billing" hidden>
-        <p>Billing information will be displayed here.</p>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Total Billed</label>
+            <div class="value">₱ 45,680.00</div>
+          </div>
+          <div class="info-item">
+            <label>Paid</label>
+            <div class="value">₱ 44,430.00</div>
+          </div>
+          <div class="info-item">
+            <label>Outstanding Balance</label>
+            <div class="value" style="color: #f59e0b;">₱ 1,250.00</div>
+          </div>
+        </div>
+        <h3 style="margin-top: 1.5rem; margin-bottom: 0.75rem; font-size: 1rem; font-weight: 600;">Recent Transactions</h3>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Description</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2025-09-25</td>
+              <td>OPD Consultation</td>
+              <td>₱ 1,250.00</td>
+              <td>Unpaid</td>
+            </tr>
+            <tr>
+              <td>2025-09-15</td>
+              <td>Lab Tests</td>
+              <td>₱ 2,500.00</td>
+              <td>Paid</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
   </main>

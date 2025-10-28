@@ -71,6 +71,7 @@
       padding:16px;
       max-width: 1400px;
       margin: 0 auto;
+      overflow-x: hidden;
     }
     .panel {
       background:#fff;
@@ -78,6 +79,7 @@
       border-radius:12px;
       padding:16px;
       box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      overflow-x: auto;
     }
     h2 {
       font-size: 1.125rem;
@@ -89,6 +91,7 @@
     table {
       width:100%;
       border-collapse:collapse;
+      min-width: 600px;
     }
     th, td {
       border:1px solid var(--border);
@@ -182,15 +185,29 @@
     @media (max-width: 1024px) {
       main {
         grid-template-columns: 1fr;
+        padding: 12px;
       }
     }
     @media (max-width: 768px) {
       header {
         flex-direction: column;
         align-items: stretch;
+        padding: 12px;
       }
       nav, .a11y-toolbar {
         justify-content: center;
+      }
+      main {
+        padding: 8px;
+      }
+      .panel {
+        padding: 12px;
+      }
+      table {
+        min-width: 500px;
+      }
+      input, select, button {
+        width: 100%;
       }
     }
   </style>
