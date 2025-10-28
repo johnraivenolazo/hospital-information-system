@@ -11,4 +11,3 @@ See the [Requirements](requirements.md) document for detailed project requiremen
 
 - Duque, Boris Gamaliel
 - Olazo, John Raiven
-

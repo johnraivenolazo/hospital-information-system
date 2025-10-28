@@ -4,68 +4,301 @@
   <meta charset="utf-8">
   <title>HIS — Admin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../assets/ud-a11y.css">
   <style>
-    :root { --bg:#f8fafc; --card:#fff; --text:#111827; --muted:#6b7280; --accent:#2563eb; --border:#e5e7eb; }
+    :root {
+      --bg:#f9fafb;
+      --card:#fff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --accent:#2563eb;
+      --accent-dark:#1d4ed8;
+      --border:#e5e7eb;
+    }
     * { box-sizing:border-box; }
-    body { margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; background:var(--bg); color:var(--text); }
-    header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:#fff; border-bottom:1px solid var(--border); position:sticky; top:0; }
-    nav a { margin-right:12px; color:var(--text); text-decoration:none; padding:8px 10px; border-radius:8px; }
-    nav a.active, nav a:hover { background:#eff6ff; color:#0b53d6; }
-    main { display:grid; grid-template-columns: 1fr 1fr; gap:16px; padding:16px; }
-    .panel { background:#fff; border:1px solid var(--border); border-radius:12px; padding:12px; }
-    table { width:100%; border-collapse:collapse; }
-    th, td { border:1px dashed var(--border); padding:8px; text-align:left; font-size:14px; }
-    input, select, button { padding:8px 10px; border:1px solid var(--border); border-radius:8px; font-size:14px; }
-    .muted { color:var(--muted); font-size:12px; }
+    body {
+      margin:0;
+      font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height: 1.6;
+    }
+    header {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:16px 20px;
+      background:#fff;
+      border-bottom:1px solid var(--border);
+      position:sticky;
+      top:0;
+      z-index: 100;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .brand {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color:var(--text);
+      text-decoration:none;
+      padding:8px 10px;
+      border-radius:8px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+    nav a.active, nav a:hover {
+      background:#eff6ff;
+      color:#0b53d6;
+    }
+    nav a:focus {
+      outline: 3px solid var(--accent);
+      outline-offset: 2px;
+    }
+    main {
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:16px;
+      padding:16px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .panel {
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:16px;
+      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    }
+    h2 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--border);
+    }
+    table {
+      width:100%;
+      border-collapse:collapse;
+    }
+    th, td {
+      border:1px solid var(--border);
+      padding:10px;
+      text-align:left;
+      font-size:14px;
+    }
+    th {
+      background: #f9fafb;
+      font-weight: 600;
+    }
+    input, select, button {
+      padding:8px 10px;
+      border:1px solid var(--border);
+      border-radius:8px;
+      font-size:14px;
+      min-height: 44px;
+      font-family: inherit;
+    }
+    input, select {
+      min-width: 150px;
+    }
+    input:focus, select:focus, button:focus {
+      outline: 3px solid var(--accent);
+      outline-offset: 2px;
+    }
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    button {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: 100px;
+    }
+    button:hover {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .muted {
+      color:var(--muted);
+      font-size:12px;
+      margin-top: 8px;
+    }
+    label:not(.sr-only) {
+      display: block;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+    .a11y-toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .a11y-toggle {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-height: 44px;
+      min-width: 120px;
+    }
+    .a11y-toggle:hover {
+      background: var(--bg);
+    }
+    .a11y-toggle:focus {
+      outline: 3px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .a11y-toggle[aria-pressed="true"] {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    @media (max-width: 1024px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      nav, .a11y-toolbar {
+        justify-content: center;
+      }
+    }
   </style>
 </head>
 <body>
+  <a href="#main" class="skip-link">Skip to main content</a>
   <header>
-    <div>HIS</div>
-    <nav>
+    <div class="brand">🏥 HIS Admin</div>
+    <nav aria-label="Main navigation">
       <a href="index.html">Dashboard</a>
       <a href="patients.html">Patients</a>
       <a href="appointments.html">Appointments</a>
-      <a href="labs.html">Orders & Labs</a>
-      <a class="active" href="admin.html">Admin</a>
+      <a href="labs.html">Labs</a>
+      <a class="active" href="admin.html" aria-current="page">Admin</a>
       <a href="login.html">Logout</a>
     </nav>
+    <div class="a11y-toolbar" aria-label="Accessibility options">
+      <button type="button" class="a11y-toggle" data-action="toggle-contrast" aria-pressed="false" aria-label="Toggle high contrast mode">High Contrast</button>
+      <button type="button" class="a11y-toggle" data-action="toggle-font-scale" aria-pressed="false" aria-label="Toggle large text mode">Large Text</button>
+    </div>
   </header>
 
-  <main>
-    <section class="panel" aria-label="User roles">
-      <h2>User role matrix</h2>
-      <table aria-label="Roles">
+  <main id="main">
+    <h1 class="sr-only">Administration</h1>
+    <section class="panel" aria-label="User role management">
+      <h2>User Role Matrix</h2>
+      <table aria-describedby="roles-desc">
+        <caption id="roles-desc" class="sr-only">User roles by department and status</caption>
         <thead>
-          <tr><th>User</th><th>Role</th><th>Department</th><th>Status</th></tr>
+          <tr>
+            <th scope="col">User</th>
+            <th scope="col">Role</th>
+            <th scope="col">Department</th>
+            <th scope="col">Status</th>
+          </tr>
         </thead>
         <tbody>
-          <tr><td>j.reyes</td><td>Doctor</td><td>Internal Med</td><td>Active</td></tr>
-          <tr><td>m.santos</td><td>Receptionist</td><td>Front Desk</td><td>Active</td></tr>
-          <tr><td>a.cruz</td><td>Lab Tech</td><td>Pathology</td><td>Active</td></tr>
+          <tr>
+            <th scope="row">j.reyes</th>
+            <td>Doctor</td>
+            <td>Internal Medicine</td>
+            <td>Active</td>
+          </tr>
+          <tr>
+            <th scope="row">m.santos</th>
+            <td>Receptionist</td>
+            <td>Front Desk</td>
+            <td>Active</td>
+          </tr>
+          <tr>
+            <th scope="row">a.cruz</th>
+            <td>Lab Tech</td>
+            <td>Pathology</td>
+            <td>Active</td>
+          </tr>
         </tbody>
       </table>
-      <div style="margin-top:12px;">
-        <input type="text" placeholder="Search user">
-        <select><option>Role</option><option>Doctor</option><option>Nurse</option></select>
-        <button>Assign</button>
+      <div style="margin-top:16px; display: flex; gap: 8px; flex-wrap: wrap;">
+        <label for="userSearch" class="sr-only">Search user</label>
+        <input id="userSearch" type="text" placeholder="Search user" aria-label="Search for user">
+        <label for="role" class="sr-only">Role</label>
+        <select id="role" aria-label="Select role">
+          <option>Select Role</option>
+          <option>Doctor</option>
+          <option>Nurse</option>
+          <option>Receptionist</option>
+          <option>Lab Tech</option>
+        </select>
+        <button type="button" aria-label="Assign role to user">Assign</button>
       </div>
       <p class="muted">Changes recorded in audit logs</p>
     </section>
 
-    <section class="panel" aria-label="Reports">
+    <section class="panel" aria-label="Report management">
       <h2>Reports</h2>
-      <table aria-label="Reports list">
+      <table aria-describedby="reports-desc">
+        <caption id="reports-desc" class="sr-only">Operational reports list with export options</caption>
         <thead>
-          <tr><th>Name</th><th>Period</th><th>Status</th><th>Action</th></tr>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Period</th>
+            <th scope="col">Status</th>
+            <th scope="col">Action</th>
+          </tr>
         </thead>
         <tbody>
-          <tr><td>Daily utilization</td><td>2025-09-28</td><td>Ready</td><td><button>Export CSV</button></td></tr>
-          <tr><td>Appointment no-shows</td><td>Sep 2025</td><td>Ready</td><td><button>Export PDF</button></td></tr>
-          <tr><td>Lab turnaround</td><td>Sep 2025</td><td>Generating</td><td><button disabled>Wait</button></td></tr>
+          <tr>
+            <th scope="row">Daily Utilization</th>
+            <td>2025-10-27</td>
+            <td>Ready</td>
+            <td><button type="button" aria-label="Export Daily Utilization report as CSV">Export CSV</button></td>
+          </tr>
+          <tr>
+            <th scope="row">Appointment No-Shows</th>
+            <td>October 2025</td>
+            <td>Ready</td>
+            <td><button type="button" aria-label="Export Appointment No-Shows report as PDF">Export PDF</button></td>
+          </tr>
+          <tr>
+            <th scope="row">Lab Turnaround</th>
+            <td>October 2025</td>
+            <td>Generating</td>
+            <td><button type="button" disabled aria-disabled="true" aria-label="Report is currently generating">Wait</button></td>
+          </tr>
         </tbody>
       </table>
     </section>
   </main>
+  <script src="../assets/ud-a11y.js"></script>
 </body>
 </html>
