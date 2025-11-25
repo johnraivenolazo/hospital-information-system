@@ -111,6 +111,10 @@
     })();
   </script>
   <link rel="stylesheet" href="../assets/styles.css">
+  <!-- Chart.js for patient demographics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <!-- jsPDF for PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to main content</a>
@@ -300,78 +304,666 @@
   </nav>
 
   <main id="main">
-    <section class="panel" aria-label="Patient search and list">
-      <h2>Patients</h2>
-      <form class="search-form" role="search" aria-label="Search patients">
-        <label for="patient-search" class="sr-only">Search by name or MRN</label>
-        <input id="patient-search" type="text" placeholder="Search by name or MRN" aria-label="Patient search">
-        <label for="status-filter" class="sr-only">Filter by status</label>
-        <select id="status-filter" aria-label="Patient status filter">
-          <option>All Patients</option>
-          <option>In Queue</option>
-          <option>Admitted</option>
-          <option>Discharged</option>
+    <!-- Patients Page Header -->
+    <div class="patients-header">
+      <div>
+        <h1 class="page-title">Patients</h1>
+        <p class="page-subtitle">Manage patient records and information</p>
+      </div>
+      <button type="button" class="btn btn-primary btn-new-patient">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <span>New Patient</span>
+      </button>
+    </div>
+
+    <!-- Patient Statistics Overview -->
+    <div class="patient-stats-grid">
+      <div class="patient-stat-card">
+        <div class="patient-stat-icon total">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </div>
+        <div class="patient-stat-content">
+          <div class="patient-stat-value">1,247</div>
+          <div class="patient-stat-label">Total Patients</div>
+        </div>
+      </div>
+
+      <div class="patient-stat-card">
+        <div class="patient-stat-icon active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <div class="patient-stat-content">
+          <div class="patient-stat-value">892</div>
+          <div class="patient-stat-label">Active Patients</div>
+        </div>
+      </div>
+
+      <div class="patient-stat-card">
+        <div class="patient-stat-icon new">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="16"></line>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+          </svg>
+        </div>
+        <div class="patient-stat-content">
+          <div class="patient-stat-value">+24</div>
+          <div class="patient-stat-label">New This Month</div>
+        </div>
+      </div>
+
+      <div class="patient-stat-card">
+        <div class="patient-stat-icon urgent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </div>
+        <div class="patient-stat-content">
+          <div class="patient-stat-value">12</div>
+          <div class="patient-stat-label">Urgent Cases</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="patients-filters-card">
+      <div class="search-container">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input 
+            type="text" 
+            id="patient-search" 
+            class="search-input" 
+            placeholder="Search by name, MRN, phone, or email..." 
+            aria-label="Search patients"
+          >
+          <button type="button" class="search-clear" aria-label="Clear search" style="display: none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="filters-container">
+        <div class="filter-group">
+          <label for="status-filter" class="filter-label">Status</label>
+          <select id="status-filter" class="filter-select" aria-label="Filter by patient status">
+            <option value="all">All Patients</option>
+            <option value="active">Active</option>
+            <option value="in-queue">In Queue</option>
+            <option value="admitted">Admitted</option>
+            <option value="discharged">Discharged</option>
         </select>
-        <button type="button" class="btn btn-primary">New Patient</button>
-      </form>
-      <div class="patient-list" role="list">
-        <div class="patient-item" role="listitem">
-          <span>P-10234 • Ana Dela Cruz</span>
-          <a href="#" class="btn" aria-label="Open patient record for Ana Dela Cruz">Open</a>
         </div>
-        <div class="patient-item" role="listitem">
-          <span>P-10677 • Mark Santos</span>
-          <a href="#" class="btn" aria-label="Open patient record for Mark Santos">Open</a>
+
+        <div class="filter-group">
+          <label for="age-filter" class="filter-label">Age Group</label>
+          <select id="age-filter" class="filter-select" aria-label="Filter by age group">
+            <option value="all">All Ages</option>
+            <option value="pediatric">Pediatric (0-17)</option>
+            <option value="adult">Adult (18-64)</option>
+            <option value="senior">Senior (65+)</option>
+          </select>
         </div>
-        <div class="patient-item" role="listitem">
-          <span>P-11001 • Liza Tan</span>
-          <a href="#" class="btn" aria-label="Open patient record for Liza Tan">Open</a>
+
+        <div class="filter-group">
+          <label for="sort-by" class="filter-label">Sort By</label>
+          <select id="sort-by" class="filter-select" aria-label="Sort patients">
+            <option value="name">Name (A-Z)</option>
+            <option value="name-desc">Name (Z-A)</option>
+            <option value="recent">Most Recent</option>
+            <option value="mrn">MRN</option>
+        </select>
+        </div>
+
+        <button type="button" class="btn-filter-reset" aria-label="Reset filters">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <path d="M3.51 15a11 11 0 1 0 2.13-9.36L1 10"></path>
+          </svg>
+          <span>Reset</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Patient Cards Grid -->
+    <div class="patients-grid" id="patients-grid" role="list">
+      <div class="patient-card" role="listitem" data-mrn="P-10234" data-name="Ana Dela Cruz" data-status="active">
+        <div class="patient-card-header">
+          <div class="patient-avatar" style="background: linear-gradient(135deg, #0D9488, #14B8A6);">
+            <span>AD</span>
+          </div>
+          <div class="patient-card-badges">
+            <span class="patient-badge status-active">Active</span>
+            <span class="patient-badge alert-critical">Critical Alert</span>
+          </div>
+        </div>
+        <div class="patient-card-body">
+          <div class="patient-name">Ana Dela Cruz</div>
+          <div class="patient-mrn">MRN: P-10234</div>
+          <div class="patient-details">
+            <div class="patient-detail-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span>34 years old</span>
+            </div>
+            <div class="patient-detail-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              <span>+63 912 345 6789</span>
+            </div>
+            <div class="patient-detail-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              <span>Last visit: Sep 25, 2025</span>
+            </div>
+          </div>
+        </div>
+        <div class="patient-card-footer">
+          <button type="button" class="btn-patient-action" data-action="view">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <span>View</span>
+          </button>
+          <button type="button" class="btn-patient-action" data-action="edit">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+            <span>Edit</span>
+          </button>
+          <button type="button" class="btn-patient-action" data-action="more">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="1"></circle>
+              <circle cx="19" cy="12" r="1"></circle>
+              <circle cx="5" cy="12" r="1"></circle>
+            </svg>
+          </button>
         </div>
       </div>
-    </section>
-    <section class="panel" aria-label="Patient profile">
-      <h2>Patient Profile</h2>
-      <div class="alert" role="alert">⚠️ Allergy: Penicillin • Critical Alert</div>
-      <div class="tabs" role="tablist" aria-label="Patient information tabs">
-        <button id="tab-overview" class="tab" role="tab" aria-selected="true" aria-controls="panel-overview">Overview</button>
-        <button id="tab-medical" class="tab" role="tab" aria-selected="false" aria-controls="panel-medical">Medical History</button>
-        <button id="tab-allergies" class="tab" role="tab" aria-selected="false" aria-controls="panel-allergies">Allergies</button>
-        <button id="tab-imaging" class="tab" role="tab" aria-selected="false" aria-controls="panel-imaging">Imaging</button>
-        <button id="tab-medications" class="tab" role="tab" aria-selected="false" aria-controls="panel-medications">Medications</button>
-        <button id="tab-encounters" class="tab" role="tab" aria-selected="false" aria-controls="panel-encounters">Encounters</button>
-        <button id="tab-labs" class="tab" role="tab" aria-selected="false" aria-controls="panel-labs">Labs</button>
-        <button id="tab-billing" class="tab" role="tab" aria-selected="false" aria-controls="panel-billing">Billing</button>
+
+      <div class="patient-card" role="listitem" data-mrn="P-10677" data-name="Mark Santos" data-status="active">
+        <div class="patient-card-header">
+          <div class="patient-avatar" style="background: linear-gradient(135deg, #0891B2, #06B6D4);">
+            <span>MS</span>
+          </div>
+          <div class="patient-card-badges">
+            <span class="patient-badge status-active">Active</span>
+          </div>
+        </div>
+        <div class="patient-card-body">
+          <div class="patient-name">Mark Santos</div>
+          <div class="patient-mrn">MRN: P-10677</div>
+          <div class="patient-details">
+            <div class="patient-detail-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span>28 years old</span>
+            </div>
+            <div class="patient-detail-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              <span>+63 923 456 7890</span>
+            </div>
+            <div class="patient-detail-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span>Last visit: Oct 15, 2025</span>
+            </div>
+          </div>
+        </div>
+        <div class="patient-card-footer">
+          <button type="button" class="btn-patient-action" data-action="view">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <span>View</span>
+          </button>
+          <button type="button" class="btn-patient-action" data-action="edit">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+            <span>Edit</span>
+          </button>
+          <button type="button" class="btn-patient-action" data-action="more">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="1"></circle>
+              <circle cx="19" cy="12" r="1"></circle>
+              <circle cx="5" cy="12" r="1"></circle>
+            </svg>
+          </button>
+        </div>
       </div>
-      <div id="panel-overview" role="tabpanel" aria-labelledby="tab-overview">
-        <div class="info-grid">
+
+      <div class="patient-card" role="listitem" data-mrn="P-11001" data-name="Liza Tan" data-status="active">
+        <div class="patient-card-header">
+          <div class="patient-avatar" style="background: linear-gradient(135deg, #10B981, #34D399);">
+            <span>LT</span>
+          </div>
+          <div class="patient-card-badges">
+            <span class="patient-badge status-active">Active</span>
+          </div>
+        </div>
+        <div class="patient-card-body">
+          <div class="patient-name">Liza Tan</div>
+          <div class="patient-mrn">MRN: P-11001</div>
+          <div class="patient-details">
+            <div class="patient-detail-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span>42 years old</span>
+            </div>
+            <div class="patient-detail-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              <span>+63 934 567 8901</span>
+            </div>
+            <div class="patient-detail-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span>Last visit: Oct 20, 2025</span>
+            </div>
+          </div>
+        </div>
+        <div class="patient-card-footer">
+          <button type="button" class="btn-patient-action" data-action="view">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <span>View</span>
+          </button>
+          <button type="button" class="btn-patient-action" data-action="edit">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+            <span>Edit</span>
+          </button>
+          <button type="button" class="btn-patient-action" data-action="more">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="1"></circle>
+              <circle cx="19" cy="12" r="1"></circle>
+              <circle cx="5" cy="12" r="1"></circle>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="patient-card" role="listitem" data-mrn="P-11234" data-name="John Reyes" data-status="in-queue">
+        <div class="patient-card-header">
+          <div class="patient-avatar" style="background: linear-gradient(135deg, #F59E0B, #FBBF24);">
+            <span>JR</span>
+          </div>
+          <div class="patient-card-badges">
+            <span class="patient-badge status-queue">In Queue</span>
+          </div>
+        </div>
+        <div class="patient-card-body">
+          <div class="patient-name">John Reyes</div>
+          <div class="patient-mrn">MRN: P-11234</div>
+          <div class="patient-details">
+            <div class="patient-detail-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span>55 years old</span>
+            </div>
+            <div class="patient-detail-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              <span>+63 945 678 9012</span>
+            </div>
+            <div class="patient-detail-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span>Waiting: 15 min</span>
+            </div>
+          </div>
+        </div>
+        <div class="patient-card-footer">
+          <button type="button" class="btn-patient-action" data-action="view">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <span>View</span>
+          </button>
+          <button type="button" class="btn-patient-action" data-action="edit">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+            <span>Edit</span>
+          </button>
+          <button type="button" class="btn-patient-action" data-action="more">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="1"></circle>
+              <circle cx="19" cy="12" r="1"></circle>
+              <circle cx="5" cy="12" r="1"></circle>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="patient-card" role="listitem" data-mrn="P-11567" data-name="Maria Garcia" data-status="admitted">
+        <div class="patient-card-header">
+          <div class="patient-avatar" style="background: linear-gradient(135deg, #EF4444, #F87171);">
+            <span>MG</span>
+          </div>
+          <div class="patient-card-badges">
+            <span class="patient-badge status-admitted">Admitted</span>
+          </div>
+        </div>
+        <div class="patient-card-body">
+          <div class="patient-name">Maria Garcia</div>
+          <div class="patient-mrn">MRN: P-11567</div>
+          <div class="patient-details">
+            <div class="patient-detail-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span>67 years old</span>
+            </div>
+            <div class="patient-detail-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+              <span>Room 204</span>
+            </div>
+            <div class="patient-detail-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span>Admitted: Oct 22, 2025</span>
+            </div>
+          </div>
+        </div>
+        <div class="patient-card-footer">
+          <button type="button" class="btn-patient-action" data-action="view">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <span>View</span>
+          </button>
+          <button type="button" class="btn-patient-action" data-action="edit">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+            <span>Edit</span>
+          </button>
+          <button type="button" class="btn-patient-action" data-action="more">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="1"></circle>
+              <circle cx="19" cy="12" r="1"></circle>
+              <circle cx="5" cy="12" r="1"></circle>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="patient-card" role="listitem" data-mrn="P-11890" data-name="Robert Lim" data-status="active">
+        <div class="patient-card-header">
+          <div class="patient-avatar" style="background: linear-gradient(135deg, #8B5CF6, #A78BFA);">
+            <span>RL</span>
+          </div>
+          <div class="patient-card-badges">
+            <span class="patient-badge status-active">Active</span>
+          </div>
+        </div>
+        <div class="patient-card-body">
+          <div class="patient-name">Robert Lim</div>
+          <div class="patient-mrn">MRN: P-11890</div>
+          <div class="patient-details">
+            <div class="patient-detail-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span>39 years old</span>
+            </div>
+            <div class="patient-detail-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              <span>+63 956 789 0123</span>
+            </div>
+            <div class="patient-detail-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span>Last visit: Oct 18, 2025</span>
+            </div>
+          </div>
+        </div>
+        <div class="patient-card-footer">
+          <button type="button" class="btn-patient-action" data-action="view">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <span>View</span>
+          </button>
+          <button type="button" class="btn-patient-action" data-action="edit">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+            <span>Edit</span>
+          </button>
+          <button type="button" class="btn-patient-action" data-action="more">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="1"></circle>
+              <circle cx="19" cy="12" r="1"></circle>
+              <circle cx="5" cy="12" r="1"></circle>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State (hidden by default) -->
+    <div class="patients-empty-state" id="patients-empty-state" style="display: none;">
+      <h3>No patients found</h3>
+      <p>Try adjusting your search or filter criteria</p>
+      <button type="button" class="btn btn-primary" onclick="document.getElementById('patient-search').value = ''; document.getElementById('status-filter').value = 'all'; filterPatients();">
+        Clear Filters
+      </button>
+    </div>
+  </main>
+
+  <!-- Patient Profile Modal -->
+  <div class="patient-modal-overlay" id="patient-modal-overlay" aria-hidden="true" style="display: none;">
+    <div class="patient-modal" id="patient-modal" role="dialog" aria-labelledby="patient-modal-title" aria-modal="true">
+      <div class="patient-modal-header">
+        <div class="patient-modal-header-content">
+          <div class="patient-profile-avatar-large" id="modal-avatar" style="background: linear-gradient(135deg, #0D9488, #14B8A6);">
+            <span id="modal-avatar-initials">AD</span>
+          </div>
+          <div class="patient-profile-info">
+            <h2 id="modal-patient-name" class="patient-modal-title">Ana Dela Cruz</h2>
+            <div class="patient-profile-meta">
+              <span id="modal-mrn">MRN: P-10234</span>
+              <span class="meta-divider">•</span>
+              <span id="modal-age">34 years old</span>
+              <span class="meta-divider">•</span>
+              <span id="modal-gender">Female</span>
+            </div>
+            <div class="patient-profile-badges" id="modal-badges">
+              <span class="patient-badge status-active">Active</span>
+            </div>
+          </div>
+        </div>
+        <div class="patient-modal-actions">
+          <button type="button" class="btn btn-secondary btn-export-pdf" id="btn-export-pdf" aria-label="Export patient profile to PDF">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Export PDF</span>
+          </button>
+          <button type="button" class="btn-icon btn-modal-close" id="btn-modal-close" aria-label="Close patient profile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="patient-modal-alert" id="modal-alert" style="display: none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+        <div id="modal-alert-text"></div>
+      </div>
+
+      <div class="patient-modal-content" id="patient-modal-content">
+        <div class="patient-modal-tabs" role="tablist" aria-label="Patient information tabs">
+          <button id="modal-tab-overview" class="modal-tab active" role="tab" aria-selected="true" aria-controls="modal-panel-overview">Overview</button>
+          <button id="modal-tab-medical" class="modal-tab" role="tab" aria-selected="false" aria-controls="modal-panel-medical">Medical History</button>
+          <button id="modal-tab-allergies" class="modal-tab" role="tab" aria-selected="false" aria-controls="modal-panel-allergies">Allergies</button>
+          <button id="modal-tab-imaging" class="modal-tab" role="tab" aria-selected="false" aria-controls="modal-panel-imaging">Imaging</button>
+          <button id="modal-tab-medications" class="modal-tab" role="tab" aria-selected="false" aria-controls="modal-panel-medications">Medications</button>
+          <button id="modal-tab-encounters" class="modal-tab" role="tab" aria-selected="false" aria-controls="modal-panel-encounters">Encounters</button>
+          <button id="modal-tab-labs" class="modal-tab" role="tab" aria-selected="false" aria-controls="modal-panel-labs">Labs</button>
+          <button id="modal-tab-billing" class="modal-tab" role="tab" aria-selected="false" aria-controls="modal-panel-billing">Billing</button>
+        </div>
+
+        <div id="modal-panel-overview" class="modal-panel active" role="tabpanel" aria-labelledby="modal-tab-overview">
+          <div class="patient-overview-grid">
+            <div class="overview-section">
+              <h3 class="overview-section-title">Personal Information</h3>
+              <div class="info-grid" id="modal-personal-info">
           <div class="info-item">
             <label>MRN</label>
             <div class="value">P-10234</div>
           </div>
           <div class="info-item">
-            <label>Name</label>
+                  <label>Full Name</label>
             <div class="value">Ana Dela Cruz</div>
           </div>
           <div class="info-item">
             <label>Date of Birth</label>
-            <div class="value">1991-03-14</div>
+                  <div class="value">March 14, 1991</div>
+                </div>
+                <div class="info-item">
+                  <label>Age</label>
+                  <div class="value">34 years old</div>
+                </div>
+                <div class="info-item">
+                  <label>Gender</label>
+                  <div class="value">Female</div>
           </div>
           <div class="info-item">
-            <label>Contact</label>
+                  <label>Contact Number</label>
             <div class="value">+63 912 345 6789</div>
           </div>
+                <div class="info-item">
+                  <label>Email</label>
+                  <div class="value">ana.delacruz@email.com</div>
+                </div>
+                <div class="info-item">
+                  <label>Address</label>
+                  <div class="value">123 Main Street, Quezon City, Metro Manila</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="overview-section">
+              <h3 class="overview-section-title">Recent Activity</h3>
+              <div class="info-grid" id="modal-activity-info">
           <div class="info-item">
             <label>Last Encounter</label>
-            <div class="value">OPD • 2025-09-25</div>
+                  <div class="value">OPD Consultation • September 25, 2025</div>
+                </div>
+                <div class="info-item">
+                  <label>Last Provider</label>
+                  <div class="value">Dr. Juan Reyes</div>
+                </div>
+                <div class="info-item">
+                  <label>Next Appointment</label>
+                  <div class="value">November 15, 2025</div>
           </div>
           <div class="info-item">
             <label>Outstanding Balance</label>
-            <div class="value">₱ 1,250.00</div>
+                  <div class="value warning-text">₱ 1,250.00</div>
+                </div>
+              </div>
           </div>
         </div>
       </div>
 
-      <div id="panel-medical" role="tabpanel" aria-labelledby="tab-medical" hidden>
+        <div id="modal-panel-medical" class="modal-panel" role="tabpanel" aria-labelledby="modal-tab-medical" hidden>
         <div class="info-grid">
           <div class="info-item">
             <label>Blood Type</label>
@@ -414,7 +1006,7 @@
         </table>
       </div>
 
-      <div id="panel-allergies" role="tabpanel" aria-labelledby="tab-allergies" hidden>
+        <div id="modal-panel-allergies" class="modal-panel" role="tabpanel" aria-labelledby="modal-tab-allergies" hidden>
         <div class="allergy-item">
           <div class="allergy-name">
             🚨 Penicillin 
@@ -450,7 +1042,7 @@
         </div>
       </div>
 
-      <div id="panel-imaging" role="tabpanel" aria-labelledby="tab-imaging" hidden>
+        <div id="modal-panel-imaging" class="modal-panel" role="tabpanel" aria-labelledby="modal-tab-imaging" hidden>
         <table>
           <thead>
             <tr>
@@ -479,27 +1071,11 @@
               <td>Dr. Santos</td>
               <td><button class="btn" aria-label="View brain MRI scan">View</button></td>
             </tr>
-            <tr>
-              <td>2024-12-10</td>
-              <td>CT Scan</td>
-              <td>Abdomen</td>
-              <td>Normal scan</td>
-              <td>Dr. Cruz</td>
-              <td><button class="btn" aria-label="View abdominal CT scan">View</button></td>
-            </tr>
-            <tr>
-              <td>2024-06-05</td>
-              <td>Ultrasound</td>
-              <td>Abdomen</td>
-              <td>Gallbladder polyp (5mm)</td>
-              <td>Dr. Lim</td>
-              <td><button class="btn" aria-label="View abdominal ultrasound">View</button></td>
-            </tr>
           </tbody>
         </table>
       </div>
 
-      <div id="panel-medications" role="tabpanel" aria-labelledby="tab-medications" hidden>
+        <div id="modal-panel-medications" class="modal-panel" role="tabpanel" aria-labelledby="modal-tab-medications" hidden>
         <h3>Current Medications</h3>
         <table>
           <thead>
@@ -528,52 +1104,9 @@
             </tr>
           </tbody>
         </table>
-
-        <h3>Previous Medications</h3>
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">Medication</th>
-              <th scope="col">Dosage</th>
-              <th scope="col">Duration</th>
-              <th scope="col">Dates</th>
-              <th scope="col">Reason Stopped</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Amoxicillin</td>
-              <td>500mg</td>
-              <td>7 days</td>
-              <td>2024-09-10 to 2024-09-17</td>
-              <td>Course completed</td>
-            </tr>
-            <tr>
-              <td>Ibuprofen</td>
-              <td>400mg</td>
-              <td>5 days</td>
-              <td>2024-08-05 to 2024-08-10</td>
-              <td>Symptoms resolved</td>
-            </tr>
-            <tr>
-              <td>Omeprazole</td>
-              <td>20mg</td>
-              <td>30 days</td>
-              <td>2024-05-01 to 2024-05-30</td>
-              <td>Treatment completed</td>
-            </tr>
-            <tr>
-              <td>Atorvastatin</td>
-              <td>10mg</td>
-              <td>6 months</td>
-              <td>2023-01-15 to 2023-07-15</td>
-              <td>Switched to lifestyle management</td>
-            </tr>
-          </tbody>
-        </table>
       </div>
 
-      <div id="panel-encounters" role="tabpanel" aria-labelledby="tab-encounters" hidden>
+        <div id="modal-panel-encounters" class="modal-panel" role="tabpanel" aria-labelledby="modal-tab-encounters" hidden>
         <table>
           <thead>
             <tr>
@@ -592,18 +1125,11 @@
               <td>Routine checkup</td>
               <td><button class="btn" aria-label="View encounter details">View</button></td>
             </tr>
-            <tr>
-              <td>2025-06-14</td>
-              <td>OPD</td>
-              <td>Dr. Santos</td>
-              <td>Hypertension follow-up</td>
-              <td><button class="btn" aria-label="View encounter details">View</button></td>
-            </tr>
           </tbody>
         </table>
       </div>
 
-      <div id="panel-labs" role="tabpanel" aria-labelledby="tab-labs" hidden>
+        <div id="modal-panel-labs" class="modal-panel" role="tabpanel" aria-labelledby="modal-tab-labs" hidden>
         <table>
           <thead>
             <tr>
@@ -622,18 +1148,11 @@
               <td>Finalized</td>
               <td><button class="btn" aria-label="View lab results">View</button></td>
             </tr>
-            <tr>
-              <td>2025-09-15</td>
-              <td>HbA1c</td>
-              <td>6.5%</td>
-              <td>Finalized</td>
-              <td><button class="btn" aria-label="View lab results">View</button></td>
-            </tr>
           </tbody>
         </table>
       </div>
 
-      <div id="panel-billing" role="tabpanel" aria-labelledby="tab-billing" hidden>
+        <div id="modal-panel-billing" class="modal-panel" role="tabpanel" aria-labelledby="modal-tab-billing" hidden>
         <div class="info-grid">
           <div class="info-item">
             <label>Total Billed</label>
@@ -665,17 +1184,19 @@
               <td>₱ 1,250.00</td>
               <td>Unpaid</td>
             </tr>
-            <tr>
-              <td>2025-09-15</td>
-              <td>Lab Tests</td>
-              <td>₱ 2,500.00</td>
-              <td>Paid</td>
-            </tr>
           </tbody>
         </table>
+        </div>
       </div>
-    </section>
-  </main>
+    </div>
+  </div>
+
+  <!-- Hidden content for PDF export (styled for print) -->
+  <div id="patient-pdf-content" style="position: absolute; left: -9999px; width: 800px; background: white; padding: 40px; font-family: Arial, sans-serif; color: #000;">
+    <!-- PDF content will be generated here -->
+  </div>
+
   <script src="../assets/scripts.js"></script>
+  <script src="../assets/patients.js"></script>
 </body>
 </html>

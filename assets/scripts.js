@@ -326,9 +326,9 @@
       try {
         const sidebarCollapsed = getPreference('sidebarCollapsed', false);
         
-        if (sidebarCollapsed && sidebar) {
-          sidebar.classList.add('collapsed');
-          body.classList.add('sidebar-collapsed');
+    if (sidebarCollapsed && sidebar) {
+      sidebar.classList.add('collapsed');
+      body.classList.add('sidebar-collapsed');
           document.documentElement.setAttribute('data-sidebar-collapsed', 'true');
         }
       } catch (e) {
