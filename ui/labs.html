@@ -4,240 +4,300 @@
   <meta charset="utf-8">
   <title>HIS — Orders & Labs</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="../assets/ud-a11y.css">
-  <style>
-    :root {
-      --bg:#f9fafb;
-      --card:#fff;
-      --text:#1f2937;
-      --muted:#6b7280;
-      --accent:#2563eb;
-      --accent-dark:#1d4ed8;
-      --border:#e5e7eb;
-      --warn:#dc2626;
-      --warn-bg:#fef2f2;
-    }
-    * { box-sizing:border-box; }
-    body {
-      margin:0;
-      font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      line-height: 1.6;
-    }
-    header {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:16px 20px;
-      background:#fff;
-      border-bottom:1px solid var(--border);
-      position:sticky;
-      top:0;
-      z-index: 100;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-    .brand {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--accent);
-    }
-    nav {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    nav a {
-      color:var(--text);
-      text-decoration:none;
-      padding:8px 10px;
-      border-radius:8px;
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-      transition: all 0.2s ease;
-    }
-    nav a.active, nav a:hover {
-      background:#eff6ff;
-      color:#0b53d6;
-    }
-    nav a:focus {
-      outline: 3px solid var(--accent);
-      outline-offset: 2px;
-    }
-    main {
-      display:grid;
-      grid-template-columns: 360px 1fr;
-      gap:16px;
-      padding:16px;
-      max-width: 1400px;
-      margin: 0 auto;
-      overflow-x: hidden;
-    }
-    .panel {
-      background:#fff;
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:16px;
-      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-      overflow-x: auto;
-    }
-    h2 {
-      font-size: 1.125rem;
-      font-weight: 600;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid var(--border);
-    }
-    input, select, button {
-      padding:8px 12px;
-      border:1px solid var(--border);
-      border-radius:8px;
-      font-size:14px;
-      min-height: 44px;
-      font-family: inherit;
-    }
-    input, select {
-      width: 100%;
-    }
-    input:focus, select:focus, button:focus {
-      outline: 3px solid var(--accent);
-      outline-offset: 2px;
-    }
-    input:focus, select:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-    }
-    button {
-      background: var(--accent);
-      color: #fff;
-      border-color: var(--accent);
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      width: 100%;
-      min-width: 100px;
-    }
-    button:hover {
-      background: var(--accent-dark);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-    }
-    .form {
-      display:grid;
-      gap:12px;
-    }
-    .form label {
-      display: block;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 4px;
-      font-size: 14px;
-    }
-    table {
-      width:100%;
-      border-collapse:collapse;
-      margin-top: 12px;
-      min-width: 600px;
-    }
-    th, td {
-      border:1px solid var(--border);
-      padding:10px;
-      text-align:left;
-      font-size:14px;
-    }
-    th {
-      background: #f9fafb;
-      font-weight: 600;
-    }
-    .abn {
-      color:#fff;
-      background:var(--warn);
-      padding:4px 8px;
-      border-radius:6px;
-      font-size:12px;
-      font-weight: 600;
-      display: inline-block;
-    }
-    .muted {
-      color:var(--muted);
-      font-size:12px;
-      margin-top: 8px;
-    }
-    .a11y-toolbar {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .a11y-toggle {
-      padding: 8px 12px;
-      border: 1px solid var(--border);
-      background: #fff;
-      color: var(--text);
-      border-radius: 8px;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      min-height: 44px;
-      min-width: 120px;
-    }
-    .a11y-toggle:hover {
-      background: var(--bg);
-    }
-    .a11y-toggle:focus {
-      outline: 3px solid var(--accent);
-      outline-offset: 2px;
-    }
-    .a11y-toggle[aria-pressed="true"] {
-      background: var(--accent);
-      color: #fff;
-      border-color: var(--accent);
-    }
-    @media (max-width: 1024px) {
-      main {
-        grid-template-columns: 1fr;
-        padding: 12px;
+  <link rel="icon" type="image/png" href="logo.png">
+  <script>
+    // Prevent flicker - apply sidebar and dark mode state immediately before CSS loads
+    // Uses localStorage to persist user preferences
+    (function() {
+      try {
+        // Helper function to safely get localStorage value
+        function getStorage(key, defaultValue) {
+          try {
+            const value = localStorage.getItem(key);
+            if (value === null) return defaultValue;
+            return value === 'true' ? true : value === 'false' ? false : value;
+          } catch(e) {
+            return defaultValue;
+          }
+        }
+        
+        // Sidebar state from localStorage
+        const sidebarCollapsed = getStorage('sidebarCollapsed', false);
+        if (sidebarCollapsed) {
+          // Set attribute IMMEDIATELY - this triggers CSS rules that prevent flash
+          document.documentElement.setAttribute('data-sidebar-collapsed', 'true');
+          
+          // Also add a style tag to ensure transitions are disabled during initial load
+          const style = document.createElement('style');
+          style.id = 'sidebar-no-transition';
+          style.textContent = `
+            .sidebar, main, .top-navbar {
+              transition: none !important;
+            }
+          `;
+          document.head.appendChild(style);
+          
+          // Function to apply classes
+          function applyCollapsedClasses() {
+            const sidebar = document.querySelector('.sidebar');
+            const body = document.body;
+            if (sidebar && body) {
+              if (!sidebar.classList.contains('collapsed')) {
+                // Disable transitions to prevent flash
+                const originalTransition = sidebar.style.transition;
+                sidebar.style.transition = 'none';
+                body.style.transition = 'none';
+                
+                sidebar.classList.add('collapsed');
+                body.classList.add('sidebar-collapsed');
+                
+                // Force reflow
+                void sidebar.offsetWidth;
+                
+                // Re-enable transitions
+                setTimeout(function() {
+                  sidebar.style.transition = originalTransition || '';
+                  body.style.transition = '';
+                }, 0);
+              }
+              return true;
+            }
+            return false;
+          }
+          
+          // Try to apply immediately if body exists
+          if (document.body) {
+            if (!applyCollapsedClasses()) {
+              // Sidebar not found, use MutationObserver
+              const observer = new MutationObserver(function(mutations, obs) {
+                if (applyCollapsedClasses()) {
+                  obs.disconnect();
+                }
+              });
+              observer.observe(document.body, {
+                childList: true,
+                subtree: true
+              });
+              
+              // Also try on DOMContentLoaded as fallback (with priority)
+              if (document.readyState === 'loading') {
+                // Use capture phase to run before other handlers
+                document.addEventListener('DOMContentLoaded', function() {
+                  applyCollapsedClasses();
+                  observer.disconnect();
+                }, true); // Use capture phase for priority
+              }
+            }
+          } else {
+            // Body doesn't exist yet
+            if (document.readyState === 'loading') {
+              // Use capture phase to run before other handlers
+              document.addEventListener('DOMContentLoaded', function() {
+                applyCollapsedClasses();
+              }, true); // Use capture phase for priority
+            }
+          }
+        }
+        
+        // Dark mode state from localStorage
+        const darkMode = getStorage('darkMode', false);
+        if (darkMode) {
+          document.documentElement.classList.add('dark-mode');
+          document.body.classList.add('dark-mode');
+        }
+      } catch(e) {
+        // Silently fail if localStorage is not available
       }
-    }
-    @media (max-width: 768px) {
-      header {
-        flex-direction: column;
-        align-items: stretch;
-        padding: 12px;
-      }
-      nav, .a11y-toolbar {
-        justify-content: center;
-      }
-      main {
-        padding: 8px;
-      }
-      .panel {
-        padding: 12px;
-      }
-      table {
-        min-width: 500px;
-      }
-    }
-  </style>
+    })();
+  </script>
+  <link rel="stylesheet" href="../assets/styles.css">
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to main content</a>
-  <header>
-    <div class="brand">🏥 HIS Labs</div>
-    <nav aria-label="Main navigation">
-      <a href="index.html">Dashboard</a>
-      <a href="patients.html">Patients</a>
-      <a href="appointments.html">Appointments</a>
-      <a class="active" href="labs.html" aria-current="page">Labs</a>
-      <a href="admin.html">Admin</a>
-      <a href="login.html">Logout</a>
-    </nav>
-    <div class="a11y-toolbar" aria-label="Accessibility options">
-      <button type="button" class="a11y-toggle" data-action="toggle-contrast" aria-pressed="false" aria-label="Toggle high contrast mode">High Contrast</button>
-      <button type="button" class="a11y-toggle" data-action="toggle-font-scale" aria-pressed="false" aria-label="Toggle large text mode">Large Text</button>
+
+  <!-- Mobile Menu Button -->
+  <button class="mobile-menu-btn" aria-label="Open navigation menu" aria-expanded="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+
+  <!-- Sidebar Overlay (Mobile) -->
+  <div class="sidebar-overlay" aria-hidden="true"></div>
+
+  <!-- Modern Sidebar Navigation -->
+  <aside class="sidebar" aria-label="Main navigation">
+    <div class="sidebar-brand">
+      <img src="logo.png" alt="Hospital Information System" class="logo">
+      <span class="logo-text">HIS</span>
+      <button class="sidebar-toggle" aria-label="Toggle sidebar" aria-expanded="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
     </div>
-  </header>
+
+    <nav class="sidebar-nav" role="navigation">
+      <a href="index.html" class="nav-item">
+        <span class="nav-item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+        </span>
+        <span class="nav-item-text">Dashboard</span>
+      </a>
+      <a href="patients.html" class="nav-item">
+        <span class="nav-item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </span>
+        <span class="nav-item-text">Patients</span>
+      </a>
+      <a href="appointments.html" class="nav-item">
+        <span class="nav-item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </span>
+        <span class="nav-item-text">Appointments</span>
+      </a>
+      <a href="labs.html" class="nav-item active" aria-current="page">
+        <span class="nav-item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44L2.5 13.5a2.5 2.5 0 0 1 0-3.01L7.04 2.06A2.5 2.5 0 0 1 9.5 2z"></path>
+            <path d="M14 2a2.5 2.5 0 0 1 2.5 2.5v15a2.5 2.5 0 0 1-4.96.44L7.5 13.5a2.5 2.5 0 0 1 0-3.01L12.04 2.06A2.5 2.5 0 0 1 14 2z"></path>
+          </svg>
+        </span>
+        <span class="nav-item-text">Labs</span>
+      </a>
+      <a href="admin.html" class="nav-item">
+        <span class="nav-item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <path d="M9 12l2 2 4-4"></path>
+          </svg>
+        </span>
+        <span class="nav-item-text">Admin</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button type="button" class="a11y-toggle" data-action="toggle-dark-mode" aria-pressed="false" aria-label="Switch to dark mode">
+        <span class="dark-mode-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Top Navigation Bar -->
+  <nav class="top-navbar" aria-label="Top navigation">
+    <div class="notifications-wrapper">
+      <button class="notifications-btn" aria-label="View notifications" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        <span class="notification-badge" aria-label="Unread notifications"></span>
+        <span class="notification-count" aria-label="2 unread notifications">2</span>
+      </button>
+
+      <div class="notifications-dropdown" role="menu" aria-label="Notifications">
+      <div class="notifications-header">
+        <h3>Notifications</h3>
+        <button class="mark-all-read" aria-label="Mark all as read">Mark all read</button>
+      </div>
+      <div class="notifications-list">
+        <div class="notification-dropdown-item unread" role="menuitem">
+          <div class="notification-icon warning">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+              <line x1="12" y1="9" x2="12" y2="13"></line>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+          </div>
+          <div class="notification-content">
+            <div class="notification-title">Abnormal lab: P-10234</div>
+            <div class="notification-time">2 hours ago</div>
+          </div>
+        </div>
+        <div class="notification-dropdown-item unread" role="menuitem">
+          <div class="notification-icon info">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </div>
+          <div class="notification-content">
+            <div class="notification-title">2 pending appointments</div>
+            <div class="notification-time">5 hours ago</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <div class="user-profile-wrapper">
+      <div class="user-profile" aria-label="User menu" aria-expanded="false">
+      <div class="user-avatar">AM</div>
+      <div class="user-info">
+        <span class="user-name">Antonio Murray</span>
+        <span class="user-role">Doctor</span>
+      </div>
+      <svg class="user-dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </div>
+
+    <div class="user-dropdown" role="menu" aria-label="User menu">
+      <div class="user-dropdown-header">
+        <div class="user-name">Antonio Murray</div>
+        <div class="user-role">antonio.murray@hospital.com</div>
+      </div>
+      <div class="user-dropdown-menu">
+        <a href="#" class="user-dropdown-item" role="menuitem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>My Profile</span>
+        </a>
+        <a href="#" class="user-dropdown-item" role="menuitem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"></path>
+          </svg>
+          <span>Settings</span>
+        </a>
+        <div class="user-dropdown-divider"></div>
+        <a href="login.html" class="user-dropdown-item" role="menuitem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          <span>Logout</span>
+        </a>
+      </div>
+    </div>
+    </div>
+  </nav>
 
   <main id="main">
     <section class="panel" aria-label="Create lab order">
@@ -269,7 +329,7 @@
           <label for="notes">Additional Notes</label>
           <input id="notes" name="notes" type="text" placeholder="Enter any special instructions or notes">
         </div>
-        <button type="button" aria-label="Submit lab order">Place Order</button>
+        <button type="button" class="btn btn-primary" aria-label="Submit lab order">Place Order</button>
         <p class="muted">Specimen tracking and barcode printing available</p>
       </form>
     </section>
@@ -311,12 +371,12 @@
           </tr>
         </tbody>
       </table>
-      <div style="margin-top:16px; display: flex; gap: 12px; flex-wrap: wrap;">
-        <button type="button" style="flex: 1;" aria-label="Validate test results">Validate</button>
-        <button type="button" style="flex: 1;" aria-label="Publish results to patient record">Publish</button>
+      <div class="button-group">
+        <button type="button" class="btn btn-primary" aria-label="Validate test results">Validate</button>
+        <button type="button" class="btn btn-primary" aria-label="Publish results to patient record">Publish</button>
       </div>
     </section>
   </main>
-  <script src="../assets/ud-a11y.js"></script>
+  <script src="../assets/scripts.js"></script>
 </body>
 </html>

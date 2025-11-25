@@ -1,220 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>HIS — Login</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="../assets/ud-a11y.css">
-  <style>
-    :root {
-      --bg:#f9fafb;
-      --card:#fff;
-      --text:#1f2937;
-      --muted:#6b7280;
-      --accent:#2563eb;
-      --accent-dark:#1d4ed8;
-      --border:#e5e7eb;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin:0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-    header {
-      padding:24px;
-      text-align:center;
-      overflow-x: hidden;
-    }
-    main {
-      display:grid;
-      place-items:center;
-      min-height:70vh;
-      padding:16px;
-    }
-    .card {
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:12px;
-      width:100%;
-      max-width:420px;
-      padding:24px;
-      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-      margin: 0 16px;
-    }
-    h1 {
-      margin:0 0 8px;
-      font-size:24px;
-    }
-    p {
-      margin:0 0 16px;
-      color:var(--muted);
-    }
-    label {
-      display:block;
-      font-size:14px;
-      margin:12px 0 6px;
-      font-weight: 600;
-      color: var(--text);
-    }
-    input {
-      width:100%;
-      padding:10px 12px;
-      border:1px solid var(--border);
-      border-radius:8px;
-      font-size:14px;
-      min-height: 44px;
-      font-family: inherit;
-    }
-    input:focus {
-      outline: 3px solid var(--accent);
-      outline-offset: 2px;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-    }
-    .actions {
-      display:flex;
-      gap:12px;
-      margin-top:16px;
-    }
-    .btn {
-      display:inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding:10px 14px;
-      border-radius:8px;
-      border:1px solid var(--border);
-      font-weight:600;
-      text-decoration:none;
-      text-align:center;
-      min-height: 44px;
-      min-width: 100px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .btn:focus {
-      outline: 3px solid var(--accent);
-      outline-offset: 2px;
-    }
-    .btn-primary {
-      background:var(--accent);
-      color:#fff;
-      border-color:var(--accent);
-    }
-    .btn-primary:hover {
-      background: var(--accent-dark);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-    }
-    .btn-primary:focus {
-      outline: 3px solid var(--accent-dark);
-      outline-offset: 2px;
-    }
-    .footer {
-      text-align:center;
-      padding:16px;
-      color:var(--muted);
-      font-size:12px;
-    }
-    nav a {
-      color:var(--accent);
-      text-decoration:none;
-    }
-    nav a:focus {
-      outline: 3px solid var(--accent);
-      outline-offset: 2px;
-    }
-    .a11y-toolbar {
-      margin-top: 8px;
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .a11y-toggle {
-      padding: 8px 12px;
-      border: 1px solid var(--border);
-      background: var(--card);
-      color: var(--text);
-      border-radius: 8px;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      min-height: 44px;
-      min-width: 120px;
-    }
-    .a11y-toggle:hover {
-      background: var(--bg);
-    }
-    .a11y-toggle:focus {
-      outline: 3px solid var(--accent);
-      outline-offset: 2px;
-    }
-    .a11y-toggle[aria-pressed="true"] {
-      background: var(--accent);
-      color: #fff;
-      border-color: var(--accent);
-    }
-    @media (max-width: 768px) {
-      header {
-        padding: 16px;
-      }
-      .card {
-        padding: 20px;
-        margin: 0 8px;
-      }
-      .a11y-toolbar {
-        flex-direction: column;
-      }
-      .a11y-toggle {
-        width: 100%;
-      }
-    }
-    @media (max-width: 480px) {
-      .card {
-        padding: 16px;
-      }
-      .actions {
-        flex-direction: column;
-      }
-      .btn {
-        width: 100%;
-      }
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Hospital Information System</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="stylesheet" href="../assets/styles.css">
 </head>
-<body>
+<body class="login-page">
   <a href="#main" class="skip-link">Skip to main content</a>
-  <header>
-    <p>Secure access for staff and providers</p>
-    <div class="a11y-toolbar" aria-label="Accessibility toolbar" style="margin-top:8px; display:flex; justify-content:center; gap:8px;">
-      <button type="button" class="a11y-toggle" data-action="toggle-contrast" aria-pressed="false" aria-label="Toggle high contrast">High contrast</button>
-      <button type="button" class="a11y-toggle" data-action="toggle-font-scale" aria-pressed="false" aria-label="Toggle large text">Large text</button>
+  
+  <!-- Header -->
+  <header class="login-header">
+    <div class="login-header-container">
+      <div class="login-header-brand">
+        <img src="logo.png" alt="Hospital Information System" class="login-logo">
+      </div>
+      <p class="login-header-subtitle">Secure access for staff and providers</p>
+      <div class="login-theme-toggle">
+        <button type="button" class="a11y-toggle" data-action="toggle-dark-mode" aria-pressed="false" aria-label="Switch to dark mode">
+          <span class="dark-mode-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </span>
+        </button>
+      </div>
     </div>
   </header>
 
-  <main id="main">
-    <section class="card" aria-label="Login form">
-      <p>Use your assigned credentials</p>
-      <form action="index.html" method="get">
-        <label for="username">Username</label>
-        <input id="username" name="username" type="text" placeholder="e.g., j.olazo" aria-required="true" required autocomplete="username">
-
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" placeholder="••••••••" aria-required="true" required autocomplete="current-password">
-
-        <div class="actions">
-          <button class="btn btn-primary" type="submit" aria-label="Login">Login</button>
-          <a class="btn" href="#" aria-label="Forgot password">Forgot password</a>
+  <!-- Main Content -->
+  <main id="main" class="login-main">
+    <div class="login-container">
+      <div class="login-card">
+        <div class="login-card-header">
+          <h1 class="login-title">Use your assigned credentials</h1>
         </div>
-      </form>
-    </section>
+        
+        <form class="login-form" action="index.html" method="get" novalidate>
+          <div class="form-group">
+            <label for="username" class="form-label">Username</label>
+            <div class="input-wrapper">
+              <input 
+                id="username" 
+                name="username" 
+                type="text" 
+                placeholder="e.g., j.olazo" 
+                aria-required="true" 
+                required 
+                autocomplete="username"
+                class="form-input"
+              >
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <div class="input-wrapper">
+              <input 
+                id="password" 
+                name="password" 
+                type="password" 
+                placeholder="Enter your password" 
+                aria-required="true" 
+                required 
+                autocomplete="current-password"
+                class="form-input"
+              >
+            </div>
+          </div>
+
+          <div class="login-actions">
+            <button type="submit" class="btn btn-primary btn-login" aria-label="Sign in to your account">
+              <span>Login</span>
+            </button>
+            <button type="button" class="btn btn-link btn-forgot" aria-label="Recover forgotten password">
+              Forgot password?
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </main>
 
-  <div class="footer">© 2025 HIS</div>
-  <script src="../assets/ud-a11y.js"></script>
+  <!-- Footer -->
+  <footer class="login-footer">
+    <p class="login-footer-text">© 2025 HIS</p>
+  </footer>
+  
+  <script src="../assets/scripts.js"></script>
 </body>
 </html>
