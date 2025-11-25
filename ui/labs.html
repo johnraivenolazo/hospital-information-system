@@ -300,44 +300,358 @@
   </nav>
 
   <main id="main">
-    <section class="panel" aria-label="Create lab order">
-      <h2>New Lab Order</h2>
-      <form class="form">
+    <!-- Labs Page Header -->
+    <div class="labs-header">
         <div>
-          <label for="patient">Patient (MRN/Name)</label>
-          <input id="patient" name="patient" type="text" placeholder="Search by MRN or name" aria-required="true" required>
-        </div>
-        <div>
-          <label for="test">Test Type</label>
-          <select id="test" name="test" aria-required="true" required>
-            <option value="">Select test type</option>
-            <option>Complete Blood Count (CBC)</option>
-            <option>Chemistry Panel</option>
-            <option>Urinalysis</option>
-          </select>
-        </div>
-        <div>
-          <label for="priority">Priority Level</label>
-          <select id="priority" name="priority" aria-required="true" required>
-            <option value="">Select priority</option>
-            <option>Routine</option>
-            <option>Stat</option>
-            <option>Urgent</option>
-          </select>
-        </div>
-        <div>
-          <label for="notes">Additional Notes</label>
-          <input id="notes" name="notes" type="text" placeholder="Enter any special instructions or notes">
-        </div>
-        <button type="button" class="btn btn-primary" aria-label="Submit lab order">Place Order</button>
-        <p class="muted">Specimen tracking and barcode printing available</p>
-      </form>
-    </section>
+        <h1 class="page-title">Laboratory Management</h1>
+        <p class="page-subtitle">Manage orders, results, and specimen tracking</p>
+      </div>
+      <button type="button" class="btn btn-primary btn-new-order">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <span>New Order</span>
+      </button>
+    </div>
 
-    <section class="panel" aria-label="Laboratory result entry">
-      <h2>Result Entry — Complete Blood Count (CBC)</h2>
-      <table aria-describedby="cbc-desc">
-        <caption id="cbc-desc" class="sr-only">Complete blood count test results with reference ranges</caption>
+    <!-- Labs Stats Overview -->
+    <div class="labs-stats-grid">
+      <div class="lab-stat-card">
+        <div class="lab-stat-icon pending">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </div>
+        <div class="lab-stat-content">
+          <div class="lab-stat-value">12</div>
+          <div class="lab-stat-label">Pending Orders</div>
+        </div>
+      </div>
+
+      <div class="lab-stat-card">
+        <div class="lab-stat-icon in-progress">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+        </div>
+        <div class="lab-stat-content">
+          <div class="lab-stat-value">8</div>
+          <div class="lab-stat-label">In Progress</div>
+        </div>
+      </div>
+
+      <div class="lab-stat-card">
+        <div class="lab-stat-icon completed">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <div class="lab-stat-content">
+          <div class="lab-stat-value">156</div>
+          <div class="lab-stat-label">Completed Today</div>
+        </div>
+      </div>
+
+      <div class="lab-stat-card">
+        <div class="lab-stat-icon urgent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </div>
+        <div class="lab-stat-content">
+          <div class="lab-stat-value">3</div>
+          <div class="lab-stat-label">Urgent Results</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="labs-tabs-container">
+      <div class="labs-tabs" role="tablist" aria-label="Lab sections">
+        <button class="labs-tab active" role="tab" aria-selected="true" aria-controls="panel-orders" data-tab="orders">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          <span>Orders</span>
+          <span class="tab-badge">12</span>
+        </button>
+        <button class="labs-tab" role="tab" aria-selected="false" aria-controls="panel-results" data-tab="results">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44L2.5 13.5a2.5 2.5 0 0 1 0-3.01L7.04 2.06A2.5 2.5 0 0 1 9.5 2z"></path>
+            <path d="M14 2a2.5 2.5 0 0 1 2.5 2.5v15a2.5 2.5 0 0 1-4.96.44L7.5 13.5a2.5 2.5 0 0 1 0-3.01L12.04 2.06A2.5 2.5 0 0 1 14 2z"></path>
+          </svg>
+          <span>Results</span>
+          <span class="tab-badge">8</span>
+        </button>
+        <button class="labs-tab" role="tab" aria-selected="false" aria-controls="panel-specimens" data-tab="specimens">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="3" y1="9" x2="21" y2="9"></line>
+            <line x1="9" y1="21" x2="9" y2="9"></line>
+          </svg>
+          <span>Specimens</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Orders Panel -->
+    <div id="panel-orders" class="labs-panel active" role="tabpanel" aria-labelledby="tab-orders">
+      <div class="labs-panel-header">
+        <div class="labs-panel-title">
+          <h2>Lab Orders</h2>
+          <p class="panel-subtitle">Create and manage laboratory test orders</p>
+        </div>
+        <div class="labs-panel-actions">
+          <div class="search-input-wrapper compact">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input type="text" class="search-input compact" placeholder="Search orders..." aria-label="Search lab orders">
+          </div>
+          <select class="filter-select compact" aria-label="Filter by status">
+            <option value="all">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="in-progress">In Progress</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Quick Order Form -->
+      <div class="labs-quick-order-card">
+        <div class="quick-order-header">
+          <h3>Quick Order</h3>
+          <button type="button" class="btn-icon-toggle" aria-label="Toggle quick order form">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+        </div>
+        <form class="quick-order-form" id="quick-order-form">
+          <div class="form-row-compact">
+            <div class="form-group-compact">
+              <label for="patient-search-lab">Patient</label>
+              <input id="patient-search-lab" type="text" placeholder="MRN or name" required>
+            </div>
+            <div class="form-group-compact">
+              <label for="test-type">Test Type</label>
+              <select id="test-type" required>
+                <option value="">Select test</option>
+                <option>Complete Blood Count (CBC)</option>
+                <option>Chemistry Panel</option>
+                <option>Lipid Panel</option>
+                <option>Liver Function Test</option>
+                <option>Urinalysis</option>
+                <option>Blood Culture</option>
+              </select>
+            </div>
+            <div class="form-group-compact">
+              <label for="priority-level">Priority</label>
+              <select id="priority-level" required>
+                <option value="routine">Routine</option>
+                <option value="stat">Stat</option>
+                <option value="urgent">Urgent</option>
+              </select>
+            </div>
+            <div class="form-group-compact">
+              <label for="order-notes">Notes</label>
+              <input id="order-notes" type="text" placeholder="Optional notes">
+            </div>
+            <div class="form-group-compact form-group-action">
+              <button type="submit" class="btn btn-primary">Place Order</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Orders List -->
+      <div class="labs-orders-grid">
+        <div class="lab-order-card urgent">
+          <div class="order-card-header">
+            <div class="order-id">ORD-2025-001234</div>
+            <div class="order-badges">
+              <span class="order-badge urgent">Urgent</span>
+              <span class="order-badge status-pending">Pending</span>
+            </div>
+          </div>
+          <div class="order-card-body">
+            <div class="order-patient">
+              <div class="order-patient-name">Ana Dela Cruz</div>
+              <div class="order-patient-mrn">MRN: P-10234</div>
+            </div>
+            <div class="order-details">
+              <div class="order-detail-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44L2.5 13.5a2.5 2.5 0 0 1 0-3.01L7.04 2.06A2.5 2.5 0 0 1 9.5 2z"></path>
+                </svg>
+                <span>Complete Blood Count (CBC)</span>
+              </div>
+              <div class="order-detail-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <span>Ordered: 2 hours ago</span>
+              </div>
+              <div class="order-detail-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>Dr. Juan Reyes</span>
+              </div>
+            </div>
+          </div>
+          <div class="order-card-footer">
+            <button type="button" class="btn btn-sm btn-secondary">View Details</button>
+            <button type="button" class="btn btn-sm btn-primary">Process</button>
+          </div>
+        </div>
+
+        <div class="lab-order-card">
+          <div class="order-card-header">
+            <div class="order-id">ORD-2025-001235</div>
+            <div class="order-badges">
+              <span class="order-badge status-in-progress">In Progress</span>
+            </div>
+          </div>
+          <div class="order-card-body">
+            <div class="order-patient">
+              <div class="order-patient-name">Mark Santos</div>
+              <div class="order-patient-mrn">MRN: P-10677</div>
+            </div>
+            <div class="order-details">
+              <div class="order-detail-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44L2.5 13.5a2.5 2.5 0 0 1 0-3.01L7.04 2.06A2.5 2.5 0 0 1 9.5 2z"></path>
+                </svg>
+                <span>Chemistry Panel</span>
+              </div>
+              <div class="order-detail-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <span>Ordered: 4 hours ago</span>
+              </div>
+              <div class="order-detail-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>Dr. Maria Santos</span>
+              </div>
+            </div>
+          </div>
+          <div class="order-card-footer">
+            <button type="button" class="btn btn-sm btn-secondary">View Details</button>
+            <button type="button" class="btn btn-sm btn-primary">Enter Results</button>
+          </div>
+        </div>
+
+        <div class="lab-order-card">
+          <div class="order-card-header">
+            <div class="order-id">ORD-2025-001236</div>
+            <div class="order-badges">
+              <span class="order-badge status-pending">Pending</span>
+            </div>
+          </div>
+          <div class="order-card-body">
+            <div class="order-patient">
+              <div class="order-patient-name">Liza Tan</div>
+              <div class="order-patient-mrn">MRN: P-11001</div>
+            </div>
+            <div class="order-details">
+              <div class="order-detail-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44L2.5 13.5a2.5 2.5 0 0 1 0-3.01L7.04 2.06A2.5 2.5 0 0 1 9.5 2z"></path>
+                </svg>
+                <span>Urinalysis</span>
+              </div>
+              <div class="order-detail-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <span>Ordered: 6 hours ago</span>
+              </div>
+              <div class="order-detail-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>Dr. Ana Cruz</span>
+              </div>
+            </div>
+          </div>
+          <div class="order-card-footer">
+            <button type="button" class="btn btn-sm btn-secondary">View Details</button>
+            <button type="button" class="btn btn-sm btn-primary">Process</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Panel -->
+    <div id="panel-results" class="labs-panel" role="tabpanel" aria-labelledby="tab-results" hidden>
+      <div class="labs-panel-header">
+        <div class="labs-panel-title">
+          <h2>Lab Results</h2>
+          <p class="panel-subtitle">Review and validate test results</p>
+        </div>
+        <div class="labs-panel-actions">
+          <div class="search-input-wrapper compact">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input type="text" class="search-input compact" placeholder="Search results..." aria-label="Search lab results">
+          </div>
+          <select class="filter-select compact" aria-label="Filter by status">
+            <option value="all">All Results</option>
+            <option value="pending">Pending Validation</option>
+            <option value="validated">Validated</option>
+            <option value="published">Published</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="labs-results-container">
+        <!-- Result Entry Card -->
+        <div class="lab-result-entry-card">
+          <div class="result-entry-header">
+        <div>
+              <h3>Complete Blood Count (CBC)</h3>
+              <div class="result-entry-meta">
+                <span>Patient: Ana Dela Cruz (P-10234)</span>
+                <span>•</span>
+                <span>Order: ORD-2025-001234</span>
+                <span>•</span>
+                <span>Ordered by: Dr. Juan Reyes</span>
+              </div>
+            </div>
+            <div class="result-entry-actions">
+              <button type="button" class="btn btn-sm btn-secondary">Save Draft</button>
+              <button type="button" class="btn btn-sm btn-primary">Validate</button>
+              <button type="button" class="btn btn-sm btn-primary">Publish</button>
+            </div>
+        </div>
+
+          <div class="result-entry-table-wrapper">
+            <table class="result-entry-table" aria-label="CBC test results">
         <thead>
           <tr>
             <th scope="col">Parameter</th>
@@ -348,34 +662,142 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+                <tr class="result-abnormal">
             <th scope="row">WBC (White Blood Cell)</th>
-            <td>12.1</td>
+                  <td><input type="text" value="12.1" class="result-input"></td>
             <td>x10⁹/L</td>
             <td>4.0–11.0</td>
-            <td><span class="abn" role="status" aria-label="High value - outside normal range">High</span></td>
+                  <td><span class="result-status high">High</span></td>
           </tr>
           <tr>
             <th scope="row">RBC (Red Blood Cell)</th>
-            <td>4.7</td>
+                  <td><input type="text" value="4.7" class="result-input"></td>
             <td>x10¹²/L</td>
             <td>4.2–5.4</td>
-            <td>Normal</td>
+                  <td><span class="result-status normal">Normal</span></td>
           </tr>
-          <tr>
+                <tr class="result-abnormal">
             <th scope="row">Hgb (Hemoglobin)</th>
-            <td>10.8</td>
+                  <td><input type="text" value="10.8" class="result-input"></td>
             <td>g/dL</td>
             <td>12.0–15.5</td>
-            <td><span class="abn" role="status" aria-label="Low value - outside normal range">Low</span></td>
+                  <td><span class="result-status low">Low</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Hct (Hematocrit)</th>
+                  <td><input type="text" value="32.5" class="result-input"></td>
+                  <td>%</td>
+                  <td>36.0–48.0</td>
+                  <td><span class="result-status normal">Normal</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Platelets</th>
+                  <td><input type="text" value="250" class="result-input"></td>
+                  <td>x10⁹/L</td>
+                  <td>150–400</td>
+                  <td><span class="result-status normal">Normal</span></td>
           </tr>
         </tbody>
       </table>
-      <div class="button-group">
-        <button type="button" class="btn btn-primary" aria-label="Validate test results">Validate</button>
-        <button type="button" class="btn btn-primary" aria-label="Publish results to patient record">Publish</button>
+          </div>
+
+          <div class="result-entry-footer">
+            <div class="result-entry-notes">
+              <label for="result-notes">Clinical Notes</label>
+              <textarea id="result-notes" rows="2" placeholder="Add any clinical notes or observations..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results List -->
+        <div class="labs-results-list">
+          <div class="lab-result-item-card">
+            <div class="result-item-header">
+              <div class="result-item-id">RES-2025-001234</div>
+              <div class="result-item-badges">
+                <span class="result-badge validated">Validated</span>
+                <span class="result-badge abnormal">Abnormal</span>
+              </div>
+            </div>
+            <div class="result-item-body">
+              <div class="result-item-patient">
+                <div class="result-item-name">Mark Santos</div>
+                <div class="result-item-mrn">MRN: P-10677</div>
+              </div>
+              <div class="result-item-details">
+                <div class="result-item-detail">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44L2.5 13.5a2.5 2.5 0 0 1 0-3.01L7.04 2.06A2.5 2.5 0 0 1 9.5 2z"></path>
+                  </svg>
+                  <span>Chemistry Panel</span>
+                </div>
+                <div class="result-item-detail">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                  <span>Completed: 1 hour ago</span>
+                </div>
+              </div>
+            </div>
+            <div class="result-item-footer">
+              <button type="button" class="btn btn-sm btn-secondary">View</button>
+              <button type="button" class="btn btn-sm btn-primary">Print</button>
+            </div>
+          </div>
+        </div>
       </div>
-    </section>
+    </div>
+
+    <!-- Specimens Panel -->
+    <div id="panel-specimens" class="labs-panel" role="tabpanel" aria-labelledby="tab-specimens" hidden>
+      <div class="labs-panel-header">
+        <div class="labs-panel-title">
+          <h2>Specimen Tracking</h2>
+          <p class="panel-subtitle">Track and manage specimen collection and processing</p>
+        </div>
+        <div class="labs-panel-actions">
+          <button type="button" class="btn btn-primary btn-sm">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Print Labels</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="specimens-grid">
+        <div class="specimen-card">
+          <div class="specimen-header">
+            <div class="specimen-barcode">BC-2025-001234</div>
+            <div class="specimen-status collected">Collected</div>
+          </div>
+          <div class="specimen-body">
+            <div class="specimen-info">
+              <div class="specimen-label">Patient</div>
+              <div class="specimen-value">Ana Dela Cruz (P-10234)</div>
+            </div>
+            <div class="specimen-info">
+              <div class="specimen-label">Test</div>
+              <div class="specimen-value">Complete Blood Count</div>
+            </div>
+            <div class="specimen-info">
+              <div class="specimen-label">Collected</div>
+              <div class="specimen-value">2 hours ago</div>
+            </div>
+            <div class="specimen-info">
+              <div class="specimen-label">Type</div>
+              <div class="specimen-value">Whole Blood</div>
+            </div>
+          </div>
+          <div class="specimen-footer">
+            <button type="button" class="btn btn-sm btn-secondary">View Details</button>
+            <button type="button" class="btn btn-sm btn-primary">Process</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
   <script src="../assets/scripts.js"></script>
 </body>

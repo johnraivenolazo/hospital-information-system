@@ -587,7 +587,101 @@
     initDoctorSelection();
     initSidebar();
     initTopNavbar();
+    initSectionTabs();
   });
+
+  // Initialize Labs, Appointments, and Admin tabs
+  function initSectionTabs() {
+    // Labs tabs
+    const labsTabs = document.querySelectorAll('.labs-tab[role="tab"]');
+    if (labsTabs.length > 0) {
+      labsTabs.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+          switchSectionTab(this, '.labs-tab', '.labs-panel');
+        });
+        tab.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            switchSectionTab(this, '.labs-tab', '.labs-panel');
+          }
+        });
+      });
+    }
+
+    // Admin tabs
+    const adminTabs = document.querySelectorAll('.admin-tab[role="tab"]');
+    if (adminTabs.length > 0) {
+      adminTabs.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+          switchSectionTab(this, '.admin-tab', '.admin-panel');
+        });
+        tab.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            switchSectionTab(this, '.admin-tab', '.admin-panel');
+          }
+        });
+      });
+    }
+  }
+
+  function switchSectionTab(selectedTab, tabSelector, panelSelector) {
+    const allTabs = document.querySelectorAll(tabSelector);
+    const allPanels = document.querySelectorAll(panelSelector);
+
+    // Deactivate all tabs and panels
+    allTabs.forEach(function(tab) {
+      tab.setAttribute('aria-selected', 'false');
+      tab.classList.remove('active');
+    });
+
+    allPanels.forEach(function(panel) {
+      panel.classList.remove('active');
+      panel.hidden = true;
+    });
+
+    // Activate selected tab and panel
+    selectedTab.setAttribute('aria-selected', 'true');
+    selectedTab.classList.add('active');
+    
+    const panelId = selectedTab.getAttribute('aria-controls');
+    if (panelId) {
+      const panel = document.getElementById(panelId);
+      if (panel) {
+        panel.classList.add('active');
+        panel.hidden = false;
+      }
+    }
+  }
+
+  // Doctor selection in appointments
+  function initDoctorSelection() {
+    const doctorCards = document.querySelectorAll('.doctor-item-card');
+    const doctorSelect = document.getElementById('doctor-select');
+    
+    if (doctorCards.length > 0 && doctorSelect) {
+      doctorCards.forEach(function(card) {
+        card.addEventListener('click', function() {
+          const doctorName = this.getAttribute('data-doctor');
+          if (doctorName && doctorSelect) {
+            // Find matching option
+            const options = doctorSelect.options;
+            for (let i = 0; i < options.length; i++) {
+              if (options[i].text.includes(doctorName)) {
+                doctorSelect.selectedIndex = i;
+                break;
+              }
+            }
+            // Visual feedback
+            doctorCards.forEach(function(c) {
+              c.classList.remove('selected');
+            });
+            this.classList.add('selected');
+          }
+        });
+      });
+    }
+  }
 
 })();
 
