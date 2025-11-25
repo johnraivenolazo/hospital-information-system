@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>HIS — Admin</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Hospital Information System</title>
   <link rel="icon" type="image/png" href="logo.png">
   <script>
     // Prevent flicker - apply sidebar and dark mode state immediately before CSS loads
@@ -110,7 +110,9 @@
       }
     })();
   </script>
-  <link rel="stylesheet" href="../assets/styles.css">
+  <link rel="stylesheet" href="assets/styles.css">
+  <!-- Chart.js for data visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to main content</a>
@@ -140,7 +142,7 @@
     </div>
 
     <nav class="sidebar-nav" role="navigation">
-      <a href="index.html" class="nav-item">
+      <a href="index.html" class="nav-item active" aria-current="page">
         <span class="nav-item-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="3" width="7" height="7"></rect>
@@ -182,7 +184,7 @@
         </span>
         <span class="nav-item-text">Labs</span>
       </a>
-      <a href="admin.html" class="nav-item active" aria-current="page">
+      <a href="admin.html" class="nav-item">
         <span class="nav-item-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
@@ -300,18 +302,27 @@
   </nav>
 
   <main id="main">
-    <!-- Admin Page Header -->
-    <div class="admin-header">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
       <div>
-        <h1 class="page-title">Administration</h1>
-        <p class="page-subtitle">Manage users, roles, and system reports</p>
+        <h1 class="dashboard-title">Dashboard</h1>
+        <p class="dashboard-subtitle">Welcome back, Dr. Murray</p>
+      </div>
+      <div class="dashboard-date">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        <span id="current-date"></span>
       </div>
     </div>
 
-    <!-- Admin Stats Overview -->
-    <div class="admin-stats-grid">
-      <div class="admin-stat-card">
-        <div class="admin-stat-icon users">
+    <!-- Key Metrics Cards -->
+    <div class="metrics-grid">
+      <div class="metric-card metric-card-primary">
+        <div class="metric-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
             <circle cx="9" cy="7" r="4"></circle>
@@ -319,266 +330,207 @@
             <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
           </svg>
         </div>
-        <div class="admin-stat-content">
-          <div class="admin-stat-value">127</div>
-          <div class="admin-stat-label">Total Users</div>
-        </div>
-      </div>
-
-      <div class="admin-stat-card">
-        <div class="admin-stat-icon active">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-          </svg>
-        </div>
-        <div class="admin-stat-content">
-          <div class="admin-stat-value">98</div>
-          <div class="admin-stat-label">Active Users</div>
-        </div>
-      </div>
-
-      <div class="admin-stat-card">
-        <div class="admin-stat-icon roles">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-            <path d="M9 12l2 2 4-4"></path>
-          </svg>
-        </div>
-        <div class="admin-stat-content">
-          <div class="admin-stat-value">8</div>
-          <div class="admin-stat-label">Roles</div>
-        </div>
-      </div>
-
-      <div class="admin-stat-card">
-        <div class="admin-stat-icon reports">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-            <polyline points="10 9 9 9 8 9"></polyline>
-          </svg>
-        </div>
-        <div class="admin-stat-content">
-          <div class="admin-stat-value">24</div>
-          <div class="admin-stat-label">Reports Generated</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Admin Tabs -->
-    <div class="admin-tabs-container">
-      <div class="admin-tabs" role="tablist" aria-label="Admin sections">
-        <button class="admin-tab active" role="tab" aria-selected="true" aria-controls="panel-users" data-tab="users">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-          </svg>
-          <span>User Management</span>
-        </button>
-        <button class="admin-tab" role="tab" aria-selected="false" aria-controls="panel-reports" data-tab="reports">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-          </svg>
-          <span>Reports</span>
-        </button>
-        <button class="admin-tab" role="tab" aria-selected="false" aria-controls="panel-audit" data-tab="audit">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-          </svg>
-          <span>Audit Log</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Users Panel -->
-    <div id="panel-users" class="admin-panel active" role="tabpanel" aria-labelledby="tab-users">
-      <div class="admin-panel-header">
-        <div class="admin-panel-title">
-          <h2>User Management</h2>
-          <p class="panel-subtitle">Manage user accounts, roles, and permissions</p>
-        </div>
-        <div class="admin-panel-actions">
-          <button type="button" class="btn btn-primary">
+        <div class="metric-content">
+          <div class="metric-label">Total Patients</div>
+          <div class="metric-value">1,247</div>
+          <div class="metric-change positive">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+              <polyline points="17 6 23 6 23 12"></polyline>
             </svg>
-            <span>Add User</span>
-          </button>
+            <span>+12.5% from last month</span>
+          </div>
         </div>
       </div>
 
-      <!-- User Search and Filters -->
-      <div class="admin-filters-card">
-        <div class="search-input-wrapper compact">
-          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
+      <div class="metric-card metric-card-success">
+        <div class="metric-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
           </svg>
-          <input type="text" class="search-input compact" placeholder="Search users..." aria-label="Search users">
         </div>
-        <select class="filter-select compact" aria-label="Filter by role">
-          <option value="all">All Roles</option>
-          <option value="doctor">Doctor</option>
-          <option value="nurse">Nurse</option>
-          <option value="receptionist">Receptionist</option>
-          <option value="lab-tech">Lab Tech</option>
-          <option value="admin">Admin</option>
-        </select>
-        <select class="filter-select compact" aria-label="Filter by status">
-          <option value="all">All Status</option>
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-          <option value="suspended">Suspended</option>
-        </select>
+        <div class="metric-content">
+          <div class="metric-label">Today's Appointments</div>
+          <div class="metric-value">42</div>
+          <div class="metric-change positive">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+              <polyline points="17 6 23 6 23 12"></polyline>
+            </svg>
+            <span>18 completed • 3 no-shows</span>
+          </div>
+        </div>
       </div>
 
-      <!-- Users Grid -->
-      <div class="admin-users-grid">
-        <div class="admin-user-card">
-          <div class="user-card-header">
-            <div class="user-card-avatar" style="background: linear-gradient(135deg, #0D9488, #14B8A6);">JR</div>
-            <div class="user-card-info">
-              <div class="user-card-name">j.reyes</div>
-              <div class="user-card-email">juan.reyes@hospital.com</div>
-            </div>
-            <div class="user-card-status active">Active</div>
-          </div>
-          <div class="user-card-body">
-            <div class="user-card-detail">
-              <span class="detail-label">Role:</span>
-              <span class="detail-value">Doctor</span>
-            </div>
-            <div class="user-card-detail">
-              <span class="detail-label">Department:</span>
-              <span class="detail-value">Internal Medicine</span>
-            </div>
-            <div class="user-card-detail">
-              <span class="detail-label">Last Login:</span>
-              <span class="detail-value">2 hours ago</span>
-            </div>
-          </div>
-          <div class="user-card-footer">
-            <button type="button" class="btn btn-sm btn-secondary">Edit</button>
-            <button type="button" class="btn btn-sm btn-primary">Manage Roles</button>
+      <div class="metric-card metric-card-warning">
+        <div class="metric-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44L2.5 13.5a2.5 2.5 0 0 1 0-3.01L7.04 2.06A2.5 2.5 0 0 1 9.5 2z"></path>
+            <path d="M14 2a2.5 2.5 0 0 1 2.5 2.5v15a2.5 2.5 0 0 1-4.96.44L7.5 13.5a2.5 2.5 0 0 1 0-3.01L12.04 2.06A2.5 2.5 0 0 1 14 2z"></path>
+          </svg>
+        </div>
+        <div class="metric-content">
+          <div class="metric-label">Pending Lab Results</div>
+          <div class="metric-value">8</div>
+          <div class="metric-change warning">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span>2 urgent • 6 routine</span>
           </div>
         </div>
+      </div>
 
-        <div class="admin-user-card">
-          <div class="user-card-header">
-            <div class="user-card-avatar" style="background: linear-gradient(135deg, #0891B2, #06B6D4);">MS</div>
-            <div class="user-card-info">
-              <div class="user-card-name">m.santos</div>
-              <div class="user-card-email">maria.santos@hospital.com</div>
-            </div>
-            <div class="user-card-status active">Active</div>
-          </div>
-          <div class="user-card-body">
-            <div class="user-card-detail">
-              <span class="detail-label">Role:</span>
-              <span class="detail-value">Receptionist</span>
-            </div>
-            <div class="user-card-detail">
-              <span class="detail-label">Department:</span>
-              <span class="detail-value">Front Desk</span>
-            </div>
-            <div class="user-card-detail">
-              <span class="detail-label">Last Login:</span>
-              <span class="detail-value">5 hours ago</span>
-            </div>
-          </div>
-          <div class="user-card-footer">
-            <button type="button" class="btn btn-sm btn-secondary">Edit</button>
-            <button type="button" class="btn btn-sm btn-primary">Manage Roles</button>
-          </div>
+      <div class="metric-card metric-card-info">
+        <div class="metric-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
         </div>
-
-        <div class="admin-user-card">
-          <div class="user-card-header">
-            <div class="user-card-avatar" style="background: linear-gradient(135deg, #10B981, #34D399);">AC</div>
-            <div class="user-card-info">
-              <div class="user-card-name">a.cruz</div>
-              <div class="user-card-email">ana.cruz@hospital.com</div>
-            </div>
-            <div class="user-card-status active">Active</div>
-          </div>
-          <div class="user-card-body">
-            <div class="user-card-detail">
-              <span class="detail-label">Role:</span>
-              <span class="detail-value">Lab Tech</span>
-            </div>
-            <div class="user-card-detail">
-              <span class="detail-label">Department:</span>
-              <span class="detail-value">Pathology</span>
-            </div>
-            <div class="user-card-detail">
-              <span class="detail-label">Last Login:</span>
-              <span class="detail-value">1 day ago</span>
-            </div>
-          </div>
-          <div class="user-card-footer">
-            <button type="button" class="btn btn-sm btn-secondary">Edit</button>
-            <button type="button" class="btn btn-sm btn-primary">Manage Roles</button>
+        <div class="metric-content">
+          <div class="metric-label">Monthly Revenue</div>
+          <div class="metric-value">$124.5K</div>
+          <div class="metric-change positive">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+              <polyline points="17 6 23 6 23 12"></polyline>
+            </svg>
+            <span>+8.2% from last month</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Reports Panel -->
-    <div id="panel-reports" class="admin-panel" role="tabpanel" aria-labelledby="tab-reports" hidden>
-      <div class="admin-panel-header">
-        <div class="admin-panel-title">
-      <h2>Reports</h2>
-          <p class="panel-subtitle">Generate and manage system reports</p>
+    <!-- Charts and Data Visualization -->
+    <div class="dashboard-grid">
+      <!-- Patient Flow Chart -->
+      <div class="dashboard-card chart-card">
+        <div class="card-header">
+          <h2>Patient Flow (Last 7 Days)</h2>
+          <div class="card-actions">
+            <button class="icon-btn" aria-label="More options">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="1"></circle>
+                <circle cx="19" cy="12" r="1"></circle>
+                <circle cx="5" cy="12" r="1"></circle>
+              </svg>
+            </button>
+          </div>
         </div>
-        <div class="admin-panel-actions">
-          <button type="button" class="btn btn-primary">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            <span>Generate Report</span>
-          </button>
+        <div class="chart-container">
+          <canvas id="patientFlowChart"></canvas>
         </div>
       </div>
 
-      <div class="admin-reports-grid">
-        <div class="admin-report-card">
-          <div class="report-card-header">
-            <div class="report-card-icon">
+      <!-- Appointment Status Distribution -->
+      <div class="dashboard-card chart-card">
+        <div class="card-header">
+          <h2>Appointment Status</h2>
+          <div class="card-actions">
+            <button class="icon-btn" aria-label="More options">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="1"></circle>
+                <circle cx="19" cy="12" r="1"></circle>
+                <circle cx="5" cy="12" r="1"></circle>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="appointmentStatusChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detailed Statistics and Activity -->
+    <div class="dashboard-grid">
+      <!-- Today's Overview -->
+      <div class="dashboard-card">
+        <div class="card-header">
+        <h2>Today's Overview</h2>
+          <a href="appointments.html" class="link-btn">View All</a>
+        </div>
+        <div class="overview-grid">
+          <div class="overview-item">
+            <div class="overview-icon reception">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="8.5" cy="7" r="4"></circle>
+                <line x1="20" y1="8" x2="20" y2="14"></line>
+                <line x1="23" y1="11" x2="17" y2="11"></line>
+              </svg>
+            </div>
+            <div class="overview-content">
+              <div class="overview-label">Reception Desk</div>
+              <div class="overview-stats">
+                <span class="stat-badge">18 check-ins</span>
+                <span class="stat-badge warning">3 no-shows</span>
+                <span class="stat-badge success">Queue moving</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="overview-item">
+            <div class="overview-icon doctors">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+            <div class="overview-content">
+              <div class="overview-label">Doctors</div>
+              <div class="overview-stats">
+                <span class="stat-badge">12 consultations</span>
+                <span class="stat-badge warning">5 labs pending</span>
+                <span class="stat-badge error">2 urgent</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="overview-item">
+            <div class="overview-icon billing">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="12" y1="1" x2="12" y2="23"></line>
                 <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
               </svg>
             </div>
-            <div class="report-card-status ready">Ready</div>
-          </div>
-          <div class="report-card-body">
-            <div class="report-card-name">Daily Utilization</div>
-            <div class="report-card-meta">
-              <span>Period: 2025-10-27</span>
-              <span>•</span>
-              <span>Generated: 2 hours ago</span>
+            <div class="overview-content">
+              <div class="overview-label">Billing</div>
+              <div class="overview-stats">
+                <span class="stat-badge success">9 invoices processed</span>
+                <span class="stat-badge warning">2 disputes</span>
+                <span class="stat-badge">Follow-up needed</span>
+              </div>
             </div>
           </div>
-          <div class="report-card-footer">
-            <button type="button" class="btn btn-sm btn-secondary">View</button>
-            <button type="button" class="btn btn-sm btn-primary">Export CSV</button>
-          </div>
         </div>
+      </div>
 
-        <div class="admin-report-card">
-          <div class="report-card-header">
-            <div class="report-card-icon">
+      <!-- Quick Actions -->
+      <div class="dashboard-card">
+        <div class="card-header">
+          <h2>Quick Actions</h2>
+        </div>
+        <div class="quick-actions-grid">
+          <a href="patients.html" class="quick-action-card">
+            <div class="quick-action-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="8.5" cy="7" r="4"></circle>
+                <line x1="20" y1="8" x2="20" y2="14"></line>
+                <line x1="23" y1="11" x2="17" y2="11"></line>
+              </svg>
+            </div>
+            <div class="quick-action-label">Register Patient</div>
+          </a>
+          <a href="appointments.html" class="quick-action-card">
+            <div class="quick-action-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                 <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -586,110 +538,129 @@
                 <line x1="3" y1="10" x2="21" y2="10"></line>
               </svg>
             </div>
-            <div class="report-card-status ready">Ready</div>
-          </div>
-          <div class="report-card-body">
-            <div class="report-card-name">Appointment No-Shows</div>
-            <div class="report-card-meta">
-              <span>Period: October 2025</span>
-              <span>•</span>
-              <span>Generated: 1 day ago</span>
-            </div>
-          </div>
-          <div class="report-card-footer">
-            <button type="button" class="btn btn-sm btn-secondary">View</button>
-            <button type="button" class="btn btn-sm btn-primary">Export PDF</button>
-          </div>
-        </div>
-
-        <div class="admin-report-card">
-          <div class="report-card-header">
-            <div class="report-card-icon">
+            <div class="quick-action-label">Schedule Appointment</div>
+          </a>
+          <a href="labs.html" class="quick-action-card">
+            <div class="quick-action-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44L2.5 13.5a2.5 2.5 0 0 1 0-3.01L7.04 2.06A2.5 2.5 0 0 1 9.5 2z"></path>
               </svg>
             </div>
-            <div class="report-card-status generating">Generating</div>
-          </div>
-          <div class="report-card-body">
-            <div class="report-card-name">Lab Turnaround</div>
-            <div class="report-card-meta">
-              <span>Period: October 2025</span>
-              <span>•</span>
-              <span>Progress: 65%</span>
+            <div class="quick-action-label">Order Lab Test</div>
+          </a>
+          <a href="admin.html" class="quick-action-card">
+            <div class="quick-action-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
             </div>
-          </div>
-          <div class="report-card-footer">
-            <button type="button" class="btn btn-sm btn-secondary" disabled>Wait</button>
-          </div>
+            <div class="quick-action-label">Generate Report</div>
+          </a>
         </div>
       </div>
     </div>
 
-    <!-- Audit Log Panel -->
-    <div id="panel-audit" class="admin-panel" role="tabpanel" aria-labelledby="tab-audit" hidden>
-      <div class="admin-panel-header">
-        <div class="admin-panel-title">
-          <h2>Audit Log</h2>
-          <p class="panel-subtitle">System activity and change history</p>
+    <!-- Lab Results and Recent Activity -->
+    <div class="dashboard-grid">
+      <!-- Pending Lab Results -->
+      <div class="dashboard-card">
+        <div class="card-header">
+          <h2>Pending Lab Results</h2>
+          <a href="labs.html" class="link-btn">View All</a>
         </div>
-        <div class="admin-panel-actions">
-          <select class="filter-select compact" aria-label="Filter by action">
-            <option value="all">All Actions</option>
-            <option value="create">Created</option>
-            <option value="update">Updated</option>
-            <option value="delete">Deleted</option>
-            <option value="login">Login</option>
-          </select>
+        <div class="lab-results-list">
+          <div class="lab-result-item urgent">
+            <div class="lab-result-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+            <div class="lab-result-content">
+              <div class="lab-result-header">
+                <span class="lab-result-id">P-10234</span>
+                <span class="lab-result-badge urgent">Urgent</span>
+              </div>
+              <div class="lab-result-test">Complete Blood Count (CBC)</div>
+              <div class="lab-result-time">Pending for 2 hours</div>
+            </div>
+            <a href="labs.html" class="lab-result-action">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </a>
+          </div>
+
+          <div class="lab-result-item">
+            <div class="lab-result-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44L2.5 13.5a2.5 2.5 0 0 1 0-3.01L7.04 2.06A2.5 2.5 0 0 1 9.5 2z"></path>
+              </svg>
+            </div>
+            <div class="lab-result-content">
+              <div class="lab-result-header">
+                <span class="lab-result-id">P-10677</span>
+                <span class="lab-result-badge">Routine</span>
+              </div>
+              <div class="lab-result-test">Chemistry Panel</div>
+              <div class="lab-result-time">Pending for 4 hours</div>
+            </div>
+            <a href="labs.html" class="lab-result-action">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
 
-      <div class="admin-audit-list">
-        <div class="audit-log-item">
-          <div class="audit-log-icon create">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-          </div>
-          <div class="audit-log-content">
-            <div class="audit-log-action">User created</div>
-            <div class="audit-log-details">j.reyes created new user account: m.santos</div>
-            <div class="audit-log-meta">2 hours ago • IP: 192.168.1.100</div>
-          </div>
+      <!-- Recent Activity -->
+      <div class="dashboard-card">
+        <div class="card-header">
+          <h2>Recent Activity</h2>
+          <a href="#" class="link-btn">View All</a>
         </div>
-
-        <div class="audit-log-item">
-          <div class="audit-log-icon update">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-            </svg>
+        <div class="activity-timeline">
+          <div class="activity-item">
+            <div class="activity-dot success"></div>
+            <div class="activity-content">
+              <div class="activity-title">New patient registered</div>
+              <div class="activity-meta">P-10245 • 15 minutes ago</div>
+            </div>
           </div>
-          <div class="audit-log-content">
-            <div class="audit-log-action">Role updated</div>
-            <div class="audit-log-details">a.cruz role changed from Lab Tech to Senior Lab Tech</div>
-            <div class="audit-log-meta">5 hours ago • IP: 192.168.1.105</div>
+          <div class="activity-item">
+            <div class="activity-dot info"></div>
+            <div class="activity-content">
+              <div class="activity-title">Appointment scheduled</div>
+              <div class="activity-meta">Dr. Smith • 1 hour ago</div>
+            </div>
           </div>
-        </div>
-
-        <div class="audit-log-item">
-          <div class="audit-log-icon login">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-              <polyline points="10 17 15 12 10 7"></polyline>
-              <line x1="15" y1="12" x2="3" y2="12"></line>
-            </svg>
+          <div class="activity-item">
+            <div class="activity-dot warning"></div>
+            <div class="activity-content">
+              <div class="activity-title">Lab result flagged</div>
+              <div class="activity-meta">P-10234 • 2 hours ago</div>
+            </div>
           </div>
-          <div class="audit-log-content">
-            <div class="audit-log-action">User login</div>
-            <div class="audit-log-details">j.reyes logged in successfully</div>
-            <div class="audit-log-meta">1 day ago • IP: 192.168.1.100</div>
+          <div class="activity-item">
+            <div class="activity-dot success"></div>
+            <div class="activity-content">
+              <div class="activity-title">Invoice processed</div>
+              <div class="activity-meta">$1,250 • 3 hours ago</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </main>
-  <script src="../assets/scripts.js"></script>
+
+  <script src="assets/scripts.js"></script>
+  <script src="assets/dashboard.js"></script>
 </body>
 </html>
+
