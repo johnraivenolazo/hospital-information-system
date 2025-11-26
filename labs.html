@@ -306,7 +306,14 @@
         <h1 class="page-title">Laboratory Management</h1>
         <p class="page-subtitle">Manage orders, results, and specimen tracking</p>
       </div>
-      <button type="button" class="btn btn-primary btn-new-order">
+      <button
+        type="button"
+        class="btn btn-primary btn-new-order"
+        id="btn-new-order"
+        aria-haspopup="dialog"
+        aria-controls="new-order-modal"
+        aria-expanded="false"
+      >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="12" y1="5" x2="12" y2="19"></line>
           <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -799,6 +806,156 @@
       </div>
     </div>
   </main>
+
+  <!-- New Lab Order Full-Screen Overlay (demo-only) -->
+  <div
+    class="patient-modal-overlay patient-new-overlay"
+    id="new-order-modal-overlay"
+    aria-hidden="true"
+    style="display: none;"
+  >
+    <div
+      class="patient-modal patient-new-modal"
+      id="new-order-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="new-order-modal-title"
+    >
+      <div class="patient-modal-header patient-new-header">
+        <div class="patient-modal-header-content">
+          <div class="patient-profile-info">
+            <h2 id="new-order-modal-title" class="patient-modal-title">New Lab Order</h2>
+            <div class="patient-profile-meta">
+              <span>This is a demo-only order form. No data will be saved.</span>
+            </div>
+          </div>
+        </div>
+        <div class="patient-modal-actions">
+          <button
+            type="button"
+            class="btn-icon btn-modal-close"
+            id="btn-new-order-close"
+            aria-label="Close new lab order"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="patient-modal-content patient-new-content" id="new-order-modal-content">
+        <div class="patient-registration">
+          <div class="registration-section">
+            <h3 class="registration-section-title">Order Details</h3>
+            <form id="labOrderForm">
+              <div class="registration-grid registration-grid-2">
+                <div class="form-group">
+                  <label class="form-label required">Patient</label>
+                  <input type="text" class="form-input" placeholder="MRN or name" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label required">Test Type</label>
+                  <select class="form-select" required>
+                    <option value="">Select test</option>
+                    <option>Complete Blood Count (CBC)</option>
+                    <option>Chemistry Panel</option>
+                    <option>Lipid Panel</option>
+                    <option>Liver Function Test</option>
+                    <option>Urinalysis</option>
+                    <option>Blood Culture</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label required">Priority</label>
+                  <select class="form-select" required>
+                    <option value="routine">Routine</option>
+                    <option value="stat">Stat</option>
+                    <option value="urgent">Urgent</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Ordering Physician</label>
+                  <select class="form-select">
+                    <option value="">Select physician</option>
+                    <option>Dr. Juan Reyes</option>
+                    <option>Dr. Maria Santos</option>
+                    <option>Dr. Ana Cruz</option>
+                    <option>Dr. Roberto Lim</option>
+                  </select>
+                </div>
+                <div class="form-group full-width">
+                  <label class="form-label">Clinical Notes</label>
+                  <textarea class="form-textarea" placeholder="Relevant clinical information, suspected diagnosis..."></textarea>
+                </div>
+              </div>
+
+              <div class="registration-actions">
+                <div class="registration-status-pill">📝 Demo-only – order will not be saved</div>
+                <div class="registration-actions-right">
+                  <button type="button" class="btn btn-secondary" id="btn-lab-order-clear">Clear</button>
+                  <button type="submit" class="btn btn-primary">Place Order (Demo)</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="assets/scripts.js"></script>
+  <script>
+    (function() {
+      const openBtn = document.getElementById('btn-new-order');
+      const overlay = document.getElementById('new-order-modal-overlay');
+      const modal = document.getElementById('new-order-modal');
+      const closeBtn = document.getElementById('btn-new-order-close');
+
+      if (!openBtn || !overlay || !modal || !closeBtn) return;
+
+      function openModal() {
+        overlay.style.display = 'flex';
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        openBtn.setAttribute('aria-expanded', 'true');
+        setTimeout(function() { modal.focus(); }, 50);
+      }
+
+      function closeModal() {
+        overlay.style.display = 'none';
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        openBtn.setAttribute('aria-expanded', 'false');
+        openBtn.focus();
+      }
+
+      openBtn.addEventListener('click', openModal);
+      closeBtn.addEventListener('click', closeModal);
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closeModal();
+      });
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.style.display === 'flex') closeModal();
+      });
+
+      const form = document.getElementById('labOrderForm');
+      const clearBtn = document.getElementById('btn-lab-order-clear');
+
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          alert('Lab order placed (demo only).\nNo data has been saved.');
+        });
+      }
+
+      if (clearBtn && form) {
+        clearBtn.addEventListener('click', function() {
+          form.reset();
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
